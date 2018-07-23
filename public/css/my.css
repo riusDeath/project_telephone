@@ -1,0 +1,14 @@
+.rate-star {
+    width: 110px;
+    height: 20px;
+    display: inline-block;
+    background: url(//static.scdn.vn/images/ecom/ic-sprites.png) no-repeat -56px -486px;
+    position: relative;
+}
+.rate-star .rated-star {
+    background: url(//static.scdn.vn/images/ecom/ic-sprites.png) no-repeat -175px -486px;
+    height: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
