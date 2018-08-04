@@ -16,7 +16,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-        if(Auth::check()){
+        
+        if (Auth::check()) {
             view()->share('user_login',Auth::user());
         }
     }

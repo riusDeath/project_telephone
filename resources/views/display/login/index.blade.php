@@ -1,16 +1,17 @@
-@extends('layouts.index')
-
-@section('link')
-    <base href="{{asset('')}}">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+     <base href="{{asset('')}}">
     <link href="{{asset('public/css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('public/font-awesome/css/font-awesome.css')}}" rel="stylesheet">
 
     <link href="{{asset('public/css/animate.css')}}" rel="stylesheet">
     <link href="{{asset('public/css/style.css')}}" rel="stylesheet">
-@endsection
-
-@section('main')
-<div class="gray-bg">
+</head>
+<body>
+    <div class="gray-bg">
 
     <div class="middle-box text-center loginscreen animated fadeInDown">
         <div>
@@ -48,4 +49,7 @@
     <script src="js/bootstrap.min.js"></script>
 
 </div>
-@endsection
+</body>
+</html>
+
+

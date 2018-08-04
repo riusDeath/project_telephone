@@ -9,7 +9,11 @@ class Comment extends Model
     protected $tabel = 'rates';
 
     protected $fillable = [
-    	'comment', 'user_id', 'product_id', 'status',
+    	'comment', 
+        'user_id', 
+        'product_id', 
+        'status',
+        'comment_style'
     ];
 
     public function product()
@@ -22,4 +26,13 @@ class Comment extends Model
     	return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
     
+    public function replies()
+    {
+        return $this->hasMany('App\Models\Comment', 'comment_style', 'id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo('App\Models\Comment', 'comment_style', 'id');
+    }
 }

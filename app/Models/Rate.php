@@ -9,7 +9,9 @@ class Rate extends Model
     protected $tabel = 'rates';
 
     protected $fillable = [
-    	'rate', 'user_id', 'product_id', 
+    	'rate', 
+        'user_id', 
+        'product_id', 
     ];
 
     public function product()

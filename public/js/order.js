@@ -9,11 +9,11 @@ $(document).ready(function(){
             data : {'qty' : qty},
             dataType : 'json',
             success:function(data) {
-            if (data!= "loi") {
-                location.reload();
-            } else {
-                alert('Lỗi khi sửa số lượng');
-            }
+                if (data!= "loi") {
+                    location.reload();
+                } else {
+                    alert('Lỗi khi sửa số lượng');
+                }
             }
         });
     });

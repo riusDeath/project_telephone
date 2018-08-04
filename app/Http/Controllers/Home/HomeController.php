@@ -22,14 +22,14 @@ class HomeController extends Controller
     function index()
     {
         $slides = Slide::where('name', 'product');
-    	$products = Product::search()->orderBy('id', 'desc')->paginate(3);   
+        $products = Product::search()->orderBy('id', 'desc')->paginate(12);   
          	
-    	return view('display.index',compact('products', 'slides'));
+        return view('display.index',compact('products', 'slides'));
     }
 
     public function sign_up()
     {
-    	return view('auth.register');
+        return view('auth.register');
     }
 
     public function login()
@@ -37,12 +37,48 @@ class HomeController extends Controller
         return view('auth.login');
     }
 
-     public function logout()
+    public function sign()
+    {
+        return redirect()->back();
+    }
+
+    public function resetPassword()
+    {
+        return view('login.reset');
+    }
+
+    public function verify()
+    {
+        return view('auth.passwords.reset');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $this->validate( $request, [
+            'password' => 'min:6|max:32',
+            'password_confirmation' => 'same:password',
+        ], [
+            'password_confirmation.same' => 'Enter password not match',
+            'password.min' => 'password min 6 chars',
+            'password.max' => 'password max 32chars',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (isset($user)) {
+           $user->password = bcrypt($request->password);
+            $user->save();
+
+            return view('auth.login');
+        }    
+    }
+
+    public function logout()
     {
         Auth::logout();
         Cart::destroy();
 
-        return redirect('home');
+        return redirect('/');
     }
 
     public function cart(Request $request, $id)
@@ -50,30 +86,27 @@ class HomeController extends Controller
         $this->validate($request,[
             'total' => 'min:1',
         ],[
-            'total.min' => 'Số lượng sản phẩm phải lớn hơn 0',
+            'total.min' => 'total > 0',
         ]);
         $product = Product::find($id);
         $qty = $request->total;
 
-        if ($qty >0) {
+        if ($qty > 0) {
             foreach ($product->attribute as $att) {
             if (isset($request->$att))
                 $option = [$request->$att];
             }
 
             if ($product->price_sale == 0) {
-                Cart::add($id,  $product->name, $qty,$product->price,['image' => $product->image ]);  
+                Cart::add($id, $product->name, $qty,$product->price, ['image' => $product->image, 'options' => isset($request->color)?$request->color:1]);  
             } else {
-                Cart::add($id,  $product->name, $qty,$product->price_sale,['image' => $product->image ]);  
+                Cart::add($id, $product->name, $qty,$product->price_sale, ['image' => $product->image, 'options' => isset($request->color)?$request->color:1]);  
             }
 
-            return redirect()->route('xem-don-hang'); 
-        } else {
-            return redirect('home');
-        }
-        
+            return redirect()->route('viewOrder'); 
+        } 
 
-           
+        return redirect('/');           
     }
 
     public function viewOrder()
@@ -85,7 +118,7 @@ class HomeController extends Controller
     {
         Cart::remove($rowId);
 
-        return redirect()->route('xem-don-hang'); 
+        return redirect()->back(); 
     }
 
     public function checkout()
@@ -104,14 +137,16 @@ class HomeController extends Controller
     {
         $qty = (int) $request->qty;
         Cart::get($rowId);
-        $product = Product::find(Cart::get($rowId)->id);    
+        $product = Product::find(Cart::get($rowId)->id); 
+
         if ( $qty!=0 && $qty <= $product->total && Cart::get($rowId)) {
             Cart::update($rowId, $qty);
             $carts = Cart::content();
+
             return response()->json(compact('carts'));
-        } else {
-            echo "loi";
-        }
+        } 
+
+        return 'loi';
     }
 
 }

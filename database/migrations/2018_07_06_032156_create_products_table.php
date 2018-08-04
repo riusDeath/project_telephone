@@ -26,10 +26,10 @@ class CreateProductsTable extends Migration
             $table->integer('view')->default(0);
             $table->string('avg_rate')->default('0');
             $table->integer('category_id')->unsigned()->nullable();
-            $table->foreign('category_id')->references('id')->on('categories');
             $table->integer('brand_id')->unsigned()->nullable();
-            $table->foreign('brand_id')->references('id')->on('brands');
             $table->integer('warranty_period_id')->unsigned()->nullable();
+            $table->foreign('brand_id')->references('id')->on('brands');
+            $table->foreign('category_id')->references('id')->on('categories');
             $table->foreign('warranty_period_id')->references('id')->on('warranty_periods');
             $table->timestamp('created_at')->nullable()->useCurrent();
             $table->timestamp('updated_at')->nullable()->useCurrent();

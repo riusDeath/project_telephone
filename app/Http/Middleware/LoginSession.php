@@ -16,16 +16,16 @@ class LoginSession
      * @return mixed
      */
     public function handle($request, Closure $next)
-    {
-        
-        if(Auth::check()){
+    {       
+        if (Auth::check()) {
             $user = Auth::user();
-            if($user->grade == 'admin' || $user->grade=='boss' && $user->status ==1){
+
+            if ($user->grade == 'admin' || $user->grade=='boss' && $user->status ==1) {
                 return $next($request);
-            }else{          
+            } else {          
                 return redirect('admin/dangnhap');
             }
-        }else{
+        } else {
             return redirect('admin/dangnhap');
         }
     }

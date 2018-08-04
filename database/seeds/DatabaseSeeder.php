@@ -24,14 +24,3 @@ class DatabaseSeeder extends Seeder
     );
     }
 }
-
-
-// class ProductSeeder extends Seeder
-// {
-//     public function run()
-//     {
-//         DB:table('products')->insert(
-//             ['name' => 'samsung','']
-//         );
-//     }
-// }

@@ -1,158 +1,174 @@
 <?php
 
+Route::get('demo', function(){
 
-Route::get('demo',function(){
-	
+	return view('email.user.checkOrder');
+}
+);
 
+Route::group(['middleware' => 'locale'], function(){
+	Route::get('change-language/{language}','HomeController@changeLanguage')->name('user.change-language');
+
+	Route::group([],function(){
+		Route::get('resetPassword', 'ResetPasswordController@resetPassword')->name('resetPassword');
+	});
+
+	Route::group(['namespace' => 'home', 'prefix' => '/'], function(){
+		Route::get('/', 'HomeController@index')->name('home');
+		Route::post('/', 'HomeController@index')->name('home');
+
+		Route::group(['prefix' => 'ajax'], function(){
+			Route::get('adress/{county_name}', 'AjaxController@adress')->name('county');
+			Route::get('county/{pro_id}', 'AjaxController@county')->name('county');
+		});
+
+		Route::group(['prefix'  => 'product'], function(){
+			Route::get('product_details/{id}', 'ProductController@views')->name('product_details');
+			Route::post('product_details/{id}', 'ProductController@views')->name('product_details');
+			Route::get('product_category/{category_id}', 'ProductController@product_category')->name('product_category');
+			Route::get('product_brand/{category_id}', 'ProductController@product_brand')->name('product_brand');
+			Route::post('product_price', 'ProductController@product_price')->name('product_price');
+			Route::get('product_price', 'ProductController@product_price')->name('product_price');
+			// Route::post('product_start', 'ProductController@product_start')->name('product_start');
+			Route::get('product_start', 'ProductController@product_start')->name('product_start');
+			Route::get('sap-xep-san-pham/{sort}', 'ProductController@sort')->name('sap-xep-san-pham');
+			Route::get('total-list-image/{val}', 'ProductController@total_list_image')->name('total_list_image');
+		});	
+
+		Route::group(['prefix' => 'account'], function(){
+			Route::get('register', 'HomeController@sign_up')->name('register');
+			Route::get('login', 'HomeController@login')->name('login');
+			Route::post('login', 'HomeController@sign')->name('login');
+			Route::get('forget_password', 'HomeController@resetPassword')->name('forget_password');
+			Route::get('reset-mat-khau', 'HomeController@verify')->name('verify');
+			Route::post('reset-mat-khau', 'HomeController@updatePassword')->name('reset-mat-khau');
+			Route::get('logout_user', 'HomeController@logout')->name('logout_user');
+		});
+
+		Route::group(['prefix' => 'reviews'], function(){
+			Route::post('add-comment/{id}', 'ProductController@addComment')->name('add-comment')->middleware('auth');
+			Route::get('add-comment/{id}', 'ProductController@addComment')->name('add-comment')->middleware('auth');
+			Route::get('add-rate/{id}', 'ProductController@addRate')->name('add-rate')->middleware('auth');
+			Route::get('add-rate/{id}', 'ProductController@addRate')->name('add-rate')->middleware('auth');
+		});
+		
+		Route::group(['prefix' => 'cart' ,  'middleware' => 'auth'], function(){
+			Route::post('cart/{id}', 'HomeController@cart')->name('cart');
+			Route::get('cart/{id}', 'HomeController@cart')->name('cart');
+			Route::get('viewOrder', 'HomeController@viewOrder')->name('viewOrder');
+			Route::get('deleteCart/{rowId}', 'HomeController@deleteCart')->name('deleteCart');
+			Route::get('checkout', 'HomeController@checkout')->name('checkout');
+			Route::post('checkout', 'HomeController@checkout')->name('checkout');
+			Route::get('editQty/{rowId}', 'HomeController@editQty')->name('editQty');
+			Route::get('viewOrders/{id}','OrderController@viewOrders')->name('viewOrders');
+			Route::get('add_cart/{id}','OrderController@add_cart')->name('add_cart');
+			Route::get('deleteAll','OrderController@deleteAll')->name('deleteAll');
+			Route::post('checkoutOrder', 'OrderController@checkout')->name('checkoutOrder');
+		});
+	});
+
+	Route::get('admin/login', 'UserController@getLoginAdmin')->name('login-Admin');
+
+	Route::get('admin/logout', 'UserController@logoutAdmin')->name('logout-Admin');
+
+	Route::group([ 'namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'adminLogin'], function(){
+
+		Route::get('/', 'DashboardController@index')->name('admin');
+
+		
+		Route::group(['prefix' => 'category'], function(){
+			Route::get('/', 'CategoryController@index')->name('category');
+			Route::get('add_category', 'CategoryController@add')->name('add_category');
+			Route::post('add_category', 'CategoryController@create')->name('add_category');
+			Route::get('update_category/{id}', 'CategoryController@edit')->name('update_category');
+			Route::post('update_category/{id}', 'CategoryController@update')->name('update_category');
+			Route::get('delete_category/{id}', 'CategoryController@delete')->name('delete_category');
+			Route::get('delete-comment/{id}/{product_id}', 'CommentController@delete')->name('delete-comment');
+		});
+		
+
+		Route::group(['prefix' => 'product'], function(){
+			Route::get('/', 'ProductController@index')->name('product');
+			Route::post('/', 'ProductController@indexSearch')->name('post-san-pham');
+			Route::get('add_product', 'ProductController@add')->name('add_product');
+			Route::post('add_product', 'ProductController@create')->name('add_product');
+			Route::get('view_product/{id}', 'ProductController@views')->name('view_product');
+			Route::get('update_product/{id}', 'ProductController@edit')->name('update_product');
+			Route::post('update_product/{id}', 'ProductController@update')->name('update_product');
+			Route::get('attributes', 'ProductController@att')->name('attributes');
+			Route::post('attributes', 'ProductController@addAtt')->name('attributes');
+			Route::get('exitAtt/{id}', 'ProductController@exitAtt')->name('exitAtt');
+			Route::get('editAtt/{id}', 'ProductController@editAtt')->name('editAtt');
+			Route::post('editAtt/{id}', 'ProductController@updateAtt')->name('editAtt');
+			Route::get('proAtt/{id}', 'ProductController@proAtt')->name('proAtt');
+			Route::post('proAtt/{id}', 'ProductController@createAtt')->name('proAtt');
+			Route::get('deleteAtt/{prodcut_id}/{id}', 'ProductController@deleteAtt')->name('deleteAtt');
+			Route::get('product_hot/{id}/{hot}', 'ProductController@product_hot')->name('product_hot');
+			Route::post('list_image/{id}', 'ProductController@list_image')->name('list-image');
+			Route::get('view_list_image/{id}','ProductController@view_list_images')->name('view-list-image');
+			Route::get('delete_list_image/{id}','ProductController@delete_list_images')->name('delete-list-image');
+		});
+		
+
+		Route::group(['prefix'=>'user'],function(){
+			Route::get('/','CustomerController@index')->name('user');
+			Route::get('delete-user/{id}', 'CustomerController@delete')->name('delete-user');
+			Route::get('destroy/{id}', 'CustomerController@destroy')->name('destroy');
+			Route::get('edit_account/{id}', 'CustomerController@edit')->name('edit_account');
+			Route::post('edit_account/{id}', 'CustomerController@update')->name('edit_account');
+		});
+
+		
+		Route::group(['prefix'=>'order'],function(){
+			Route::get('/', 'OrdersController@index')->name('order');
+			Route::post('/', 'OrdersController@indexSearch')->name('post-order');
+			Route::get('detail/{id}', 'OrdersController@detail')->name('detail');		
+			Route::get('selectPays/{id}', 'OrdersController@ajaxPays')->name('selectPays');
+			Route::get('approved/{id}', 'OrdersController@approved')->name('approved');
+		});
+
+		Route::group(['prefix' => 'method'],function(){
+			Route::get('pay', 'OrdersController@method')->name('pay');
+			Route::post('pay', 'OrdersController@pay')->name('pay');
+			Route::get('editPay/{id}', 'OrdersController@editPay')->name('editPay');
+			Route::post('editPay/{id}', 'OrdersController@updatePay')->name('editPay');
+			Route::get('editShip/{id}', 'OrdersController@editShip')->name('editShip');
+			Route::post('editShip/{id}', 'OrdersController@updateShip')->name('editShip');
+			Route::get('ship', 'OrdersController@ship')->name('ship');
+			Route::post('ship', 'OrdersController@newShip')->name('ship');
+			Route::get('deleteShip/{id}', 'OrdersController@deleteShip')->name('deleteShip');
+			Route::get('deletePay/{id}', 'OrdersController@deletePay')->name('deletePay');
+		});
+		
+		Route::group(['prefix' => '/'], function(){
+			Route::get('/list_admin', 'AdminController@index')->name('list-admin');
+			Route::get('update_admin/{id}', 'AdminController@edit')->name('update-admin');
+			Route::post('update_admin/{id}', 'AdminController@update')->name('update-admin');
+			Route::get('delete_admin/{id}', 'AdminController@delete')->name('delete-admin');
+			Route::get('account_admin/{id}', 'AdminController@detail')->name('account-admin');
+			Route::get('add_new_account', 'AdminController@add')->name('add_new_account');
+			Route::post('add_new_account', 'AdminController@create')->name('add_new_account');
+			Route::get('account-admin', 'AdminController@views')->name('account-admin');
+			Route::post('update_account_admin/{id}', 'AdminController@updateViews')->name('update_account_admin');
+			Route::get('logs', 'LogController@logs')->name('logs');
+			Route::post('logs', 'LogController@search')->name('logs');
+		});
+		
+		Route::group(['prefix' => 'slide'], function(){
+			Route::get('/', 'SlideController@index')->name('list-slide');
+			Route::get('add_slide', 'SlideController@add')->name('add-slide');
+			Route::post('add_slide', 'SlideController@create')->name('add-slide');
+			Route::get('delete_slide/{id}', 'SlideController@delete')->name('delete-slide');
+			Route::get('edit_slide/{id}', 'SlideController@edit')->name('edit-slide');
+			Route::post('edit_slide/{id}', 'SlideController@update')->name('edit-slide');
+		});
+
+	});
+
+	Auth::routes();
+
+	Route::get('/',  'HomeController@index')->name('home');
 });
 
-Route::group(['namespace' => 'home', 'prefix' => 'home'], function(){
-	Route::get('/', 'HomeController@index')->name('home');
-	Route::post('/', 'HomeController@index')->name('home');
-
-	Route::group(['prefix' => 'ajax'], function(){
-		Route::get('adress/{county_name}', 'AjaxController@adress')->name('county');
-		Route::get('county/{pro_id}', 'AjaxController@county')->name('county');
-	});
-
-	Route::group(['prefix'  => 'san-pham'], function(){
-		Route::get('chi-tiet-san-pham/{id}', 'ProductController@views')->name('home-chi-tiet-san-pham');
-		Route::post('chi-tiet-san-pham/{id}', 'ProductController@views')->name('home-chi-tiet-san-pham');
-		Route::get('san-pham-danh-muc/{category_id}', 'ProductController@product_category')->name('san-pham-danh-muc');
-		Route::get('san-pham-thuong-hieu/{category_id}', 'ProductController@product_brand')->name('san-pham-thuong-hieu');
-		Route::post('san-pham-theo-gia', 'ProductController@product_price')->name('san-pham-theo-gia');
-		// Route::post('san-pham-theo-rate', 'ProductController@product_start')->name('san-pham-theo-rate');
-		Route::get('san-pham-theo-rate', 'ProductController@product_start')->name('san-pham-theo-rate');
-		Route::get('sap-xep-san-pham/{sort}', 'ProductController@sort')->name('sap-xep-san-pham');
-	});	
-
-	Route::group(['prefix' => 'tai-khoan'], function(){
-		Route::get('dang-ky', 'HomeController@sign_up')->name('dang-ky');
-		Route::get('dang-nhap', 'HomeController@login')->name('dang-nhap');
-		Route::get('dang-xuat-user', 'HomeController@logout')->name('dang-xuat-user');
-	});
-
-	Route::group(['prefix' => 'reviews'], function(){
-		Route::post('add-comment/{id}', 'ProductController@addComment')->name('add-comment')->middleware('auth');
-		Route::get('add-rate/{id}', 'ProductController@addRate')->name('add-rate')->middleware('auth');
-		Route::get('add-rate/{id}', 'ProductController@addRate')->name('add-rate')->middleware('auth');
-	});
-	
-	Route::group(['prefix' => 'gio-hang' ,  'middleware' => 'auth'], function(){
-		Route::post('them-gio-hang/{id}', 'HomeController@cart')->name('them-gio-hang');
-		Route::get('them-gio-hang/{id}', 'HomeController@cart')->name('them-gio-hang');
-		Route::get('xem-don-hang', 'HomeController@viewOrder')->name('xem-don-hang');
-		Route::get('xoa-san-pham-gio-hang/{rowId}', 'HomeController@deleteCart')->name('xoa-san-pham-gio-hang');
-		Route::get('thanh-toan', 'HomeController@checkout')->name('thanh-toan');
-		Route::post('thanh-toan', 'HomeController@checkout')->name('thanh-toan');
-		Route::get('sua-qty-cart/{rowId}', 'HomeController@editQty')->name('sua-qty-cart');
-		Route::get('lich-su-mua-hang/{id}','OrderController@viewOrders')->name('home-lich-su-mua-hang');
-		Route::get('home-them-gio-hang/{id}','OrderController@add_cart')->name('home-them-gio-hang');
-		Route::get('xoa-gio-hang','OrderController@deleteAll')->name('xoa-gio-hang');
-		Route::post('thanh-toan-don-hang', 'OrderController@checkout')->name('thanh-toan-don-hang');
-
-	});
-});
 
 
-
-
-Route::get('admin/dangnhap', 'UserController@getDangNhapAdmin')->name('dang-nhap-Admin');
-Route::post('admin/dangnhap', 'UserController@postDangNhapAdmin')->name('dang-nhap-Admin');
-Route::get('admin/logout', 'UserController@getDangXuatAdmin')->name('dang-xuat-Admin');
-
-
-Route::group([ 'namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'adminLogin'], function(){
-
-	Route::get('/', 'DashboardController@index')->name('admin');
-
-	
-	Route::group(['prefix' => 'danh-muc'], function(){
-		Route::get('/', 'CategoryController@index')->name('danh-muc');
-		// Route::get('them-danh-muc', 'CategoryController@add')->name('them-danh-muc');
-		Route::post('them-danh-muc', 'CategoryController@create')->name('them-danh-muc');
-		Route::get('sua-danh-muc/{id}', 'CategoryController@edit')->name('sua-danh-muc');
-		Route::post('sua-danh-muc/{id}', 'CategoryController@update')->name('sua-danh-muc');
-		Route::get('xoa-danh-muc/{id}', 'CategoryController@delete')->name('xoa-danh-muc');
-		Route::get('xoa-comment/{id}/{product_id}', 'CommentController@delete')->name('xoa-comment');
-	});
-	
-
-	Route::group(['prefix' => 'san-pham'], function(){
-		Route::get('/', 'ProductController@index')->name('san-pham');
-		Route::post('/', 'ProductController@indexSearch')->name('post-san-pham');
-		Route::get('them-san-pham', 'ProductController@add')->name('them-san-pham');
-		Route::post('them-san-pham', 'ProductController@create')->name('them-san-pham');
-		Route::get('xem-san-pham/{id}', 'ProductController@views')->name('xem-san-pham');
-		Route::get('sua-san-pham/{id}', 'ProductController@edit')->name('sua-san-pham');
-		Route::post('sua-san-pham/{id}', 'ProductController@update')->name('sua-san-pham');
-		Route::get('thong-so-ky-thuat', 'ProductController@att')->name('thong-so-ky-thuat');
-		Route::post('thong-so-ky-thuat', 'ProductController@addAtt')->name('thong-so-ky-thuat');
-		Route::get('xoa-thuoc-tinh/{id}', 'ProductController@exitAtt')->name('xoa-thuoc-tinh');
-		Route::get('sua-thuoc-tinh/{id}', 'ProductController@editAtt')->name('sua-thuoc-tinh');
-		Route::post('sua-thuoc-tinh/{id}', 'ProductController@updateAtt')->name('sua-thuoc-tinh');
-		Route::get('xem-thong-so-ky-thuat/{id}', 'ProductController@proAtt')->name('xem-thong-so-ky-thuat');
-		Route::post('xem-thong-so-ky-thuat/{id}', 'ProductController@createAtt')->name('xem-thong-so-ky-thuat');
-		Route::get('xoa-thong-so-ky-thuat/{prodcut_id}/{id}', 'ProductController@deleteAtt')->name('xoa-thong-so-ky-thuat');
-		Route::get('san-pham-hot/{id}/{hot}', 'ProductController@product_hot')->name('san-pham-hot');
-	});
-	
-
-	Route::group(['prefix'=>'khach-hang'],function(){
-		Route::get('/','CustomerController@index')->name('khach-hang');
-		Route::get('xoa-khach-hang/{id}', 'CustomerController@delete')->name('xoa-khach-hang');
-		Route::get('lich-su-mua-hang/{id}', 'CustomerController@destroy')->name('lich-su-mua-hang');
-		Route::get('sua-ho-so/{id}', 'CustomerController@edit')->name('sua-ho-so');
-		Route::post('sua-ho-so/{id}', 'CustomerController@update')->name('sua-ho-so');
-	});
-
-	
-	Route::group(['prefix'=>'don-hang'],function(){
-		Route::get('/', 'OrdersController@index')->name('don-hang');
-		Route::post('/', 'OrdersController@indexSearch')->name('post-don-hang');
-		Route::get('chi-tiet-don-hang/{id}', 'OrdersController@detail')->name('chi-tiet-don-hang');		
-		Route::get('selectPays/{id}', 'OrdersController@ajaxPays')->name('selectPays');
-		Route::get('duyet-don-hang/{id}', 'OrdersController@duyet')->name('duyet-don-hang');
-	});
-
-	Route::group(['prefix' => 'phuong-thuc'],function(){
-		Route::get('phuong-thuc-thanh-toan', 'OrdersController@method')->name('phuong-thuc-thanh-toan');
-		Route::post('phuong-thuc-thanh-toan', 'OrdersController@pay')->name('phuong-thuc-thanh-toan');
-		Route::get('sua-phuong-thuc-thanh-toan/{id}', 'OrdersController@editPay')->name('sua-phuong-thuc-thanh-toan');
-		Route::post('sua-phuong-thuc-thanh-toan/{id}', 'OrdersController@updatePay')->name('sua-phuong-thuc-thanh-toan');
-		Route::get('sua-phuong-thuc-giao-hang/{id}', 'OrdersController@editShip')->name('sua-phuong-thuc-giao-hang');
-		Route::post('sua-phuong-thuc-giao-hang/{id}', 'OrdersController@updateShip')->name('sua-phuong-thuc-giao-hang');
-		Route::get('phuong-thuc-giao-hang', 'OrdersController@ship')->name('phuong-thuc-giao-hang');
-		Route::post('phuong-thuc-giao-hang', 'OrdersController@newShip')->name('phuong-thuc-giao-hang');
-		Route::get('xoa-phuong-thuc-giao-hang/{id}', 'OrdersController@deleteShip')->name('xoa-phuong-thuc-giao-hang');
-		Route::get('xoa-phuong-thuc-thanh-toan/{id}', 'OrdersController@deletePay')->name('xoa-phuong-thuc-thanh-toan');
-	});
-	
-	Route::group(['prefix' => '/'], function(){
-		Route::get('/danh-sach-admin', 'AdminController@index')->name('danh-sach-admin');
-		Route::get('sua-thong-tin-admin/{id}', 'AdminController@edit')->name('sua-thong-tin-admin');
-		Route::post('sua-thong-tin-admin/{id}', 'AdminController@update')->name('sua-thong-tin-admin');
-		Route::get('xoa-quyen-admin/{id}', 'AdminController@delete')->name('xoa-quyen-admin');
-		Route::get('ho-so-admin/{id}', 'AdminController@detail')->name('ho-so-admin');
-		Route::get('them-moi-admin', 'AdminController@add')->name('them-moi-admin');
-		Route::post('them-moi-admin', 'AdminController@create')->name('them-moi-admin');
-		Route::get('ho-so-admin', 'AdminController@views')->name('ho-so-admin');
-		Route::post('sua-ho-so-admin/{id}', 'AdminController@updateViews')->name('sua-ho-so-admin');
-		Route::get('lich-su-hoat-dong', 'LogController@logs')->name('lich-su-hoat-dong');
-		Route::post('lich-su-hoat-dong', 'LogController@search')->name('lich-su-hoat-dong');
-	});
-	
-	Route::group(['prefix' => 'slide'], function(){
-		Route::get('/', 'SlideController@index')->name('danh-sach-slide');
-		Route::get('them-moi-slide', 'SlideController@add')->name('them-moi-slide');
-		Route::post('them-moi-slide', 'SlideController@create')->name('them-moi-slide');
-		Route::get('xoa-slide/{id}', 'SlideController@delete')->name('xoa-slide');
-		Route::get('sua-slide/{id}', 'SlideController@edit')->name('sua-slide');
-		Route::post('sua-slide/{id}', 'SlideController@update')->name('sua-slide');
-	});
-
-});
-
-Auth::routes();
-
-Route::get('/home',  'HomeController@index')->name('home');

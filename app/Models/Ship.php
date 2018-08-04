@@ -9,7 +9,11 @@ class Ship extends Model
     protected $tabel = 'ships';
 
     protected $fillable = [
-    	'name', 'description', 'price', 'adress', 'status',
+    	'name', 
+    	'description', 
+    	'price', 
+    	'adress', 
+    	'status',
     ];
 
     public function order()
@@ -17,3 +21,4 @@ class Ship extends Model
     	return $this->hasMany('App\Models\Order', 'ship_id', 'id');
     }
 }
+

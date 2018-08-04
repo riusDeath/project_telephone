@@ -1,6 +1,6 @@
 <?php $__env->startSection('content'); ?>
 	<div class="wrapper wrapper-content animated fadeInRight ecommerce">
-		<div class="col-md-9">
+		<div class="">
 		<div class="" style="padding:10px">
 		<div class="row">
 			<h3> <?php echo e($product->name); ?></h3>
@@ -14,23 +14,21 @@
             <p>Thuộc danh mục: <?php echo e($product->category->name); ?></p>
             <p>Thuộc thương hiệu: <?php echo e($product->brand->name); ?></p>
 			<p>Thời gian bảo hành: <?php echo e($product->warranty_period->time); ?> <?php echo e($product->warranty_period->type); ?></p>
-            
-
 			<p>Số lượng : <?php echo e($product->total); ?> cái</p>
 			<p>Giá gốc: <?php echo e(number_format($product['price'])); ?> VNĐ</p>
 			<p>Giá sale: <?php echo e(number_format($product['price_sale'])); ?> VNĐ</p>
-			<p>Số sản phẩm đã bán: </p>	
-			<a href="<?php echo e(route('sua-san-pham',['id' => $product->id])); ?>" class="btn btn-success">Sửa thông tin</a>										
+			<p>Độ yêu thích trung bình: <?php echo e($product->avg_rate); ?> /5 starts</p>	
+			<a href="<?php echo e(route('sua-san-pham',['id' => $product->id])); ?>" class="btn btn-success">Sửa thông tin</a>									
 			</div>
 			<p>
             <label for="">Mô tả về sản phẩm:</label>
             <p>
-                <?php echo $product->description; ?>
-        
+                <?php echo $product->description; ?>        
             </p>
         </p>
         <div class="clearfix"></div>
-        <?php if(count($product->comment) !=0): ?>        
+        <?php if(count($product->comment) !=0): ?> 
+        <hr>       
         <h3>Bảng Comment</h3>
         <table class="table">
         <thead>
@@ -41,8 +39,7 @@
                 <th>Nội dung đăng</th>
                 <th>Ngày đăng</th>
                 <th>Thao tác</th>
-            </tr>
-            
+            </tr>            
         </thead>
         <tbody>
         <?php $__currentLoopData = $product->comment; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cm): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -63,7 +60,8 @@
         </tbody>
         </table>
         <?php endif; ?>
-        <?php if(count($product->rate) !=0): ?>      
+        <?php if(count($product->rate) !=0): ?>  
+        <hr>    
         <h3> Bảng Rate</h3>
             <table class="table">
         <thead>
@@ -73,8 +71,7 @@
                 <th>Người dùng</th>
                 <th>Số sao</th>
                 <th>Ngày đăng</th>
-            </tr>
-            
+            </tr>            
         </thead>
         <tbody>
         <?php $__currentLoopData = $product->rate; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rate): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -89,14 +86,10 @@
         </tbody>
          </table>
          <?php endif; ?>
-
-		</div>
-		
+		</div>		
 	</div>
 </div>
-
 </div>
-
 
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

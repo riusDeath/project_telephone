@@ -31,7 +31,7 @@ class ProductRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                 Rule::unique('categories')->ignore(request()->id),
+                 Rule::unique('products')->ignore(request()->id),
             ],
             'total' => 'required|min:0',
             'price' => 'required|min:3',

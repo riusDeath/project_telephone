@@ -50,6 +50,9 @@
 <!-- style CSS -->
 <link rel="stylesheet" type="text/css" href="<?php echo e(asset('public/css/display/style.css')); ?>" media="all">
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" href="<?php echo e(asset('public/css/font-awesome.min.css')); ?>">
+<link rel="stylesheet" href="<?php echo e(asset('public/css/my.css')); ?>">                                  
+
 <?php echo $__env->yieldContent('link'); ?>
 
 </head>
@@ -130,8 +133,8 @@
                 <div id="search">
                     <form method="post" action="">
                     <div class="input-group">
-                        <select class="cate-dropdown hidden-xs" name="category_id">
-                            <option>Tất cả danh mục</option>
+                     <!--    <select class="cate-dropdown hidden-xs" name="category_id">
+                            <option selected=""  value="0">Tất cả danh mục</option>
                             <?php $__currentLoopData = $parent_categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $parent): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <option value="$parent->id"><?php echo e($parent->name); ?></option>
                             <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -140,9 +143,9 @@
                             <?php endif; ?>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        </select>
+                        </select> -->
                         <input type="hidden" value="<?php echo csrf_token() ?>" name ="_token">
-                        <input type="text" class="form-control" placeholder="Search" name="search">
+                        <input type="text" class="form-control" placeholder="Tìm kiếm theo tên sản phẩm" name="search">
                         <button class="btn-search" type="submit"><i class="fa fa-search"></i></button>
                     </div>
                     </form>
@@ -319,9 +322,13 @@
                             </div>
                             <div class="pr-info-area">
                             <div class="pr-button">
-                                <div class="mt-button add_to_wishlist"> <a href=""> <i class="fa fa-heart"></i> </a> </div>
-                                <div class="mt-button add_to_compare"> <a href=""> <i class="fa fa-signal"></i> </a> </div>
-                                <div class="mt-button quick-view"> <a href=""> <i class="fa fa-search"></i> </a> </div>
+                                <div class="rating"> 
+                                    <div class="rate-star">
+                                        <div class="rated-star" style="width:<?php echo e(($pro_hot->rate_avg1()!=0)?($pro_hot->rate_avg1()/5*100):0); ?>%;">&nbsp;
+                                    </div>
+                                    <div class=""><?php echo e($pro_hot->rate_avg1()); ?>/5 rate</div>
+                                </div>
+                                </div>
                             </div>
                             </div>
                         </div>

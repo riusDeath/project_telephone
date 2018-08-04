@@ -43,7 +43,7 @@
                     <div class="sorter">
                         <div class="short-by">
                         <label>Sắp xếp theo giá: </label>
-                        <select  class="mysortok" duong-dan="<?php echo e(url('/')); ?>/home/san-pham/sap-xep-san-pham/" width="auto">
+                        <select  class="mysortok" duong-dan="<?php echo e(url('/')); ?>/san-pham/sap-xep-san-pham/" width="auto">
                             <option selected="selected" value="" > Tiêu chí</option>
                             <option  value="ASC" >Thấp lên cao</option>
                             <option value="DESC" >Cao xuống thấp</option>
@@ -71,7 +71,7 @@
                                             <?php if(Auth::check()): ?>
                                             <span>
                                                 <a class="add-to-cart-mt"  href="<?php echo e(route('home-them-gio-hang',['id' => $product->id])); ?>" >
-                                                <i class="fa fa-shopping-cart"> Xóa</i>Thêm vào giỏ hàng</a>
+                                                <i class="fa fa-shopping-cart"> </i>Thêm vào giỏ hàng</a>
                                             </span>   
                                             <?php endif; ?>                                  
                                         </div>
@@ -93,14 +93,23 @@
                                             <div class="rate-star">
                                                 <div class="rated-star" style="width:<?php echo e(($product->rate_avg1()!=0)?($product->rate_avg1()/5*100):0); ?>%;">&nbsp;
                                                 </div>
-                                                <div class=""><?php echo e($product->rate_avg1()); ?>/5 rate</div>
+                                                <input  type="hidden" value=" <?php echo e($product->rate_avg1()); ?>/5 rate ">
                                             </div>
                                         </div>
                                         <div class="item-price">
-                                            <div class="price-box"> 
-                                                <span class="regular-price"> 
-                                                    <span class="price"><?php echo e($product->price_sale==0?number_format($product->price):number_format($product->price_sale)); ?> VND</span> 
-                                                </span> 
+                                            <div class="price-box">
+                                                <?php if($product->price_sale != 0): ?>
+                                                <p class="special-price"> 
+                                                    <span class="price-label">Special Price</span> <span class="price"> <?php echo e(number_format($product->price_sale)); ?>  VNĐ</span> 
+                                                </p>
+                                                <p class="old-price"> 
+                                                    <span class="price-label">Regular Price:</span> <span class="price"><?php echo e(number_format($product->price)); ?>  VNĐ </span> 
+                                                </p>
+                                                <?php else: ?>
+                                                <p class="special-price"> 
+                                                    <span class="price-label">Special Price</span> <span class="price"> <?php echo e(number_format($product->price)); ?>  VNĐ  </span> 
+                                                </p>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
@@ -405,8 +414,51 @@
 </div>
 
 <?php $__env->startSection('script'); ?>
-  <script type="text/javascript" src="<?php echo e(asset('public/js/myJs.js')); ?>">
-      
+  
+  <script type="text/javascript" >
+     $(document).ready(function(){
+        $(document).on('click', '.add-to-cart-mt', function(e){
+            e.preventDefault();
+            var add = confirm('Bạn muốn thêm sản phẩm vào giỏ hàng ');
+            if (add) {
+                var href = $(this).attr('href');
+                $.ajax({
+                    url: href,
+                    type: 'GET',
+                    dataType: 'json',
+                    success:function(data){
+                        $('.mini-cart-list').load(location.href + " .mini-cart-list>*");
+                        $('#mini-cart-list1').load(location.href + " #mini-cart-list1>*");
+                    }
+                });
+            }     
+        });  
+}) ;
+    $(document).ready(function(){
+    $('.mysortok').change(function(e){
+        e.preventDefault();
+        var sort = $(this).val();
+        var href =  $(this).attr('duong-dan')+sort;
+        console.log(sort);
+        $.ajax({
+            url: href,
+            type : "GET",
+            dataType:'json',
+            success:function(data){
+                console.log(data);
+                var temp = "";
+                $.each(data.products, function(index, value) {
+                    // temp+= '<li class="item col-lg-4 col-md-4 col-sm-6 col-xs-6 ">'+value.description+'</li>'; 
+                temp += '<li class="item col-lg-4 col-md-4 col-sm-6 col-xs-6 "><div class="product-item"><div class="item-inner"><div class="product-thumbnail"><div class="icon-sale-label sale-left">Sale</div><div class="icon-new-label new-right">New</div><div class="pr-img-area"><a title="Ipsums Dolors Untra" href="<?php echo e(url('/')); ?>/san-pham/chi-tiet-san-pham/'+value.id+'"><div> <img class="first-img" src="<?php echo e(url('/')); ?>/uploads/'+value.image+' "><img class="hover-img" src="<?php echo e(url('/')); ?>/uploads/'+value.image+' "></div> </a><span><a class="add-to-cart-mt " data-toggle="modal" href="#modal-id"><i class="fa fa-shopping-cart"></i>Thêm vào giỏ hàng</a></span> </a> </a><span><a class="add-to-cart-mt " data-toggle="modal" href="#modal-id"><i class="fa fa-shopping-cart"></i>Thêm vào giỏ hàng</a></span> </a></div><div class="pr-info-area"><div class="pr-button"><div class="mt-button add_to_wishlist"> <a href=""> <i class="fa fa-heart"></i> </a> </div><div class="mt-button add_to_compare"> <a href=""> <i class="fa fa-signal"></i> </a> </div><div class="mt-button quick-view"> <a href=""> <i class="fa fa-search"></i> </a> </div></div></div></div><div class="item-info"><div class="info-inner"><div class="item-title"> <a title="Ipsums Dolors Untra" href="">'+value.name+'</a> </div><div class="item-content"><div class="rating"> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> </div><div class="item-price"><div class="price-box"><span class="regular-price"> <div class="item-price"><div class="price-box"> <span class="regular-price"> <span class="price">'+value.price+' VNĐ</span> </span> </div></div></div></div> </div></div></div></li>';                                      
+                                });
+                        $('.products-grid').html(temp);
+                    },error:function(res){
+                        alert("loi");
+                }
+        });
+    });
+
+    }); 
   </script>
 <?php $__env->stopSection(); ?>
   

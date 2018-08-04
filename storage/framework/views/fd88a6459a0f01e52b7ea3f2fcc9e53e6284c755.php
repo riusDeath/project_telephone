@@ -9,6 +9,7 @@
                     <form method="POST" action="<?php echo e(route('login')); ?>" aria-label="<?php echo e(__('Login')); ?>">
                         <?php echo csrf_field(); ?>
 
+                        
                         <div class="form-group row">
                             <label for="email" class="col-sm-4 col-form-label text-md-right"><?php echo e(__('E-Mail Address')); ?></label>
 
@@ -51,12 +52,12 @@
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    <?php echo e(__('Login')); ?>
+                                    <?php echo e(__('Đăng nhập')); ?>
 
                                 </button>
 
-                                <a class="btn btn-link" href="<?php echo e(route('password.request')); ?>">
-                                    <?php echo e(__('Forgot Your Password?')); ?>
+                                <a class="btn btn-link" href="<?php echo e(route('quen-mat-khau')); ?>">
+                                    <?php echo e(__('Quên mật khẩu?')); ?>
 
                                 </a>
                             </div>

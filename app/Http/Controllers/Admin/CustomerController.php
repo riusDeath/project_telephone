@@ -14,26 +14,27 @@ class CustomerController extends Controller
     
     public function index()
     {
-    	$users = User::search()->orderBy('id', 'desc')->paginate(12);
+        $users = User::search()->orderBy('id', 'desc')->paginate(12);
 
-    	return view('admin.customer.index', compact('users'));
+        return view('admin.customer.index', compact('users'));
     }
     public function delete($id)
     {
-    	$user = User::find($id);
-    	if($user->status == 1){
-    		$user->status = 0;
-    	}else{
-    		$user->status =1;
-    	}
-    	$user->save();
+        $user = User::find($id);
+
+        if ($user->status == 1) {
+            $user->status = 0;
+        } else {
+            $user->status = 1;
+        }
+        $user->save();
         Log::create([
             'user_id' => Auth::user()->id,
-            'action' => 'Thay đổi quyền truy cập khách hàng: '.$id,
-            'object' => 'nguoi-dung',
+            'action' => 'Change status user : '.$id,
+            'object' => 'user',
         ]);
 
-    	return redirect()->route('khach-hang');
+        return redirect()->back();
     }
    
     public function destroy($id)
@@ -42,19 +43,20 @@ class CustomerController extends Controller
             $us = User::find($id);
         
             return view('admin.customer.orderDetail', compact('orders','us'));
-        } else {
-            echo "404 Erorr not found";
-        }
+        } 
+
+        return '404 not found';
         
     }
 
     public function edit($id)
     {
         if ($cus = User::findOrFail($id)) {
+
             return view('admin.customer.edit', compact('cus'));
-        } else {
-            echo "404 Erorr not found";
-        }
+        } 
+            
+        return '404 not found';
     }
 
     public function update(UserRequest $request, $id)
@@ -70,11 +72,10 @@ class CustomerController extends Controller
         $user->save();
         Log::create([
             'user_id' => Auth::user()->id,
-            'action' => 'Sửa thông tin người dùng: '.$id,
-            'object' => 'nguoi-dung',
+            'action' => 'update user : '.$id,
+            'object' => 'user',
         ]);
 
-        return redirect('admin/khach-hang/sua-ho-so/'.$id)->with('thongbao', 'Sửa thông tin thành công');
+        return redirect('admin/user/edit_account/'.$id)->with('mess', trans('admin.update_successfully')) ;
     }
-
 }

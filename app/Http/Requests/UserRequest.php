@@ -39,6 +39,4 @@ class UserRequest extends FormRequest
             'passwordAgain' => 'min:6|max:32|same:password',
         ];
     }
-
-   
 }

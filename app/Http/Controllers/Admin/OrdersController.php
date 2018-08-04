@@ -18,24 +18,28 @@ class OrdersController extends Controller
 {
     public function index()
     {
-    	$orders = Order::orderBy('id', 'desc')->paginate(6);
+        $orders = Order::orderBy('id', 'desc')->paginate(6);
 
-    	return view('admin.order.index', compact('orders'));
+        return view('admin.order.index', compact('orders'));
     }
 
     public function indexSearch()
     {
-        $orders = Order::search()->orderBy('id', 'desc')->paginate(6)->appends('search', request()->search);
+        $orders = Order::search()->orderBy('id', 'desc')->paginate(6)
+                ->appends('search', request()->search);
 
         return view('admin.order.index',compact('orders'));
     }
 
     public function detail($id)
     {
-    	$order = Order::find($id);
-     	$detail = OrderDetail::search($id)->get();
+        if ($order = Order::findOrFail($id)) {
+            $detail = OrderDetail::search($id)->get();
 
-    	return view('admin.order.detail', compact('detail','order'));
+            return view('admin.order.detail', compact('detail','order'));
+        } 
+        
+        return '404 not Found';     	
     }
 
      public function userOrders($id)
@@ -52,19 +56,12 @@ class OrdersController extends Controller
         return view('admin.order.method', compact('pays'));
     }
 
-    public function ajaxPays($id)
-    {
-        $pay= Pay::find($id);
-        echo "
-            <p>$pay->name</p>
-        " ;
-    }
-
     public function pay(PayRequest $request)
     {
         Pay::create($request->all());
 
-        return redirect('admin/phuong-thuc-thanh-toan')->with('thongbao', 'Thêm mới thành công');
+        return redirect('admin/pay')
+                ->with('mess', trans('admin.add_successfully')) ;
     }
 
     public function ship()
@@ -78,12 +75,14 @@ class OrdersController extends Controller
     {
         Ship::create($request->all());
 
-        return redirect('admin/phuong-thuc-giao-hang')->with('thongbao', 'Thêm mới thành công');
+        return redirect('admin/ship')
+                ->with('mess', trans('admin.update_successfully')) ;
     }
 
-    public function duyet($id)
+    public function approved($id)
     {
         $order = Order::find($id);
+        
         if ($order->status == 0) {
           $order->status = 1;
         } else {
@@ -92,8 +91,8 @@ class OrdersController extends Controller
         $order->save();
         Log::create([
             'user_id' => Auth::user()->id,
-            'action' => 'Duyệt đơn hàng id: '.$id,
-            'object' => 'don-hang',
+            'action' => 'Approved id: '.$id,
+            'object' => 'order',
         ]);
 
         return redirect()->back();
@@ -114,11 +113,12 @@ class OrdersController extends Controller
         $pay->save();
         Log::create([
             'user_id' => Auth::user()->id,
-            'action' => 'Sửa phương thức thanh toan: '.$id,
-            'object' => 'phuong-thuc',
+            'action' => 'update pay: '.$id,
+            'object' => 'pay',
         ]);
 
-        return redirect('admin/phuong-thuc/sua-phuong-thuc-thanh-toan/'.$id)->with('thongbao', 'Sửa phương thức thành công');
+        return redirect('admin/method/editPay/'.$id)
+                ->with('mess', trans('admin.update_successfully')) ;
 
     }
 
@@ -136,11 +136,11 @@ class OrdersController extends Controller
         $ship->save();
         Log::create([
             'user_id' => Auth::user()->id,
-            'action' => 'Sửa phương thức giao hàng: '.$id,
-            'object' => 'phuong-thuc',
+            'action' => 'Update ship: '.$id,
+            'object' => 'ship',
         ]);
 
-        return redirect('admin/phuong-thuc/sua-phuong-thuc-giao-hang/'.$id)->with('thongbao','Sửa phương thức thành công');
+        return redirect('admin/method/updateShip/'.$id)->with('mess', trans('admin.update_successfully')) ;
     }
 
     public function deletePay($id)
@@ -154,14 +154,14 @@ class OrdersController extends Controller
             $pay->save();
             Log::create([
                 'user_id' => Auth::user()->id,
-                'action' => 'Sửa trạng thái phương thức thanh toán: '.$id,
-                'object' => 'phuong-thuc',
+                'action' => 'change status pay: '.$id,
+                'object' => 'pay',
             ]);
 
-            return redirect('admin/phuong-thuc/phuong-thuc-thanh-toan');
-        } else {
-            echo "404 Error ";
-        }
+            return redirect('admin/method/pay');
+        } 
+
+        return  '404 Error';
     }
 
     public function deleteShip($id)
@@ -175,13 +175,14 @@ class OrdersController extends Controller
             $ship->save();
             Log::create([
                 'user_id' => Auth::user()->id,
-                'action' => 'Sửa trạng thái phương thức giao hàng: '.$id,
-                'object' => 'phuong-thuc',
+                'action' => 'change status ship: '.$id,
+                'object' => 'ship',
             ]);
 
-            return redirect('admin/phuong-thuc/phuong-thuc-giao-hang');
-        } else {
-            echo "404 Error ";
-        }
+            return redirect('admin/method/ship');
+        } 
+        
+        return  '404 Error';
     }
+    
 }

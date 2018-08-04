@@ -9,7 +9,9 @@ class Log extends Model
     protected $tabel = 'logs';
 
     protected $fillable = [
-    	'user_id', 'action', 'object'
+    	'user_id', 
+        'action', 
+        'object'
     ];
 
     public function user()
@@ -27,3 +29,4 @@ class Log extends Model
     }
 
 }
+

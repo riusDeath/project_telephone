@@ -15,7 +15,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware('auth');
+        //
     }
 
     /**
@@ -29,5 +29,12 @@ class HomeController extends Controller
         $products = Product::search()->where('status', '1')->orderBy('id', 'desc')->paginate(12); 
               
         return view('display.index',compact('products', 'slides'));
+    }
+
+    public function changeLanguage($language)
+    {
+        \Session::put('website_language', $language);
+
+        return redirect()->back();
     }
 }

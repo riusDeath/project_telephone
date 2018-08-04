@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html>
 
-
 <head>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Admin</title>
 
     <link href="<?php echo e(asset('public/css/bootstrap.min.css')); ?>" rel="stylesheet">
-
     <!-- Morris -->
     <link href="<?php echo e(asset('public/css/animate.css')); ?>" rel="stylesheet">
     <link href="<?php echo e(asset('public/css/style.css')); ?>" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo e(asset('public/css/font-awesome.min.css')); ?>">
     <script type="text/javascript" src="<?php echo e(asset('public/ckeditor/ckeditor.js')); ?>"></script>
-
-
 </head>
-
 
 <body>
     <div id="wrapper">
@@ -78,13 +73,6 @@
                     </ul>
                 </li> 
                 <li>
-                    <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">Quản lý Slider</span><span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level collapse">
-                        <li><a href="<?php echo e(route('danh-sach-slide')); ?>">Danh sách Slider</a></li>
-                        <li><a href="<?php echo e(route('them-moi-slide')); ?>">Thêm mới Slider</a></li>
-                    </ul>
-                </li>
-                <li>
                     <a href="#"><i class="fa fa-shopping-cart"></i> <span class="nav-label">Quản lý đơn hàng</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="<?php echo e(route('don-hang')); ?>">Danh sách đơn hàng</a></li>
@@ -103,6 +91,13 @@
                         <li><a href="<?php echo e(route('them-moi-admin')); ?>">Thêm mới tài khoản</a></li>
                     </ul>
                 </li> 
+                <li>
+                    <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">Quản lý Slider</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="<?php echo e(route('danh-sach-slide')); ?>">Danh sách Slider</a></li>
+                        <li><a href="<?php echo e(route('them-moi-slide')); ?>">Thêm mới Slider</a></li>
+                    </ul>
+                </li>
                 <li>
                     <a href="#">
                         <i class="fa fa-globe"></i> 

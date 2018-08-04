@@ -16,8 +16,15 @@ class User extends Authenticatable
      */
 
     protected $table = 'users';
+
     protected $fillable = [
-        'name', 'email', 'adress',  'phone', 'grade', 'status', 'password',
+        'name', 
+        'email', 
+        'adress', 
+        'phone', 
+        'grade', 
+        'status', 
+        'password',
     ];
 
     /**
@@ -31,9 +38,9 @@ class User extends Authenticatable
 
     public function scopeSearch($query)
     {
-        if(empty(request()->search)){
+        if (empty(request()->search)) {
             return $query;
-        }else{
+        } else {
             return $query->where('name', 'like', '%'.request()->search.'%');
         }
     }

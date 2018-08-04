@@ -2,7 +2,7 @@
 <div class="panel panel-default">
 
     <!-- Default panel contents -->
-    <div class="panel-heading">Thêm mới danh mục</div>
+    <div class="panel-heading">sửa Slide</div>
   <div>
     
     <?php if(isset($thongbao)): ?>
@@ -29,7 +29,7 @@
             <div class="form-group">
                <label for="">Ảnh</label>
                <input type="file" class="form-control" name="link" required>
-               <img src="<?php echo e(asset('public/slide/'.$slide->link)); ?>" alt="">
+               <img src="<?php echo e(asset('public/slider/'.$slide->link)); ?>" alt="">
            </div>           
            <button type="submit" class="btn btn-primary">Sửa</button>
        </form>

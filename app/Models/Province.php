@@ -9,7 +9,9 @@ class Province extends Model
      protected $tabel = 'provinces';
 
     protected $fillable = [
-    	'county', 'adress', 'pro_id',
+    	'county', 
+    	'adress', 
+    	'pro_id',
     ];
 
     public function location()

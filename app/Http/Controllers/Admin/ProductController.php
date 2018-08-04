@@ -13,6 +13,7 @@ use App\Models\OrderDetail;
 use App\Models\Attribute;
 use App\Models\ProductAtt;
 use App\Models\Log;
+use App\Models\list_image;
 use Illuminate\Support\Facades\Auth;
 use App\Services\PayUService\Exception;
 use App\Http\Requests\ProductRequest;
@@ -22,7 +23,7 @@ use App\Http\Requests\ProductAtributeRequest;
 class ProductController extends Controller
 {
     public function index(Request $request)
-    {        
+    {      
         if (isset($request->sort) && $request->sort !=0) {
             if ($request->sort == 1) {
                 $products = Product::where('total', 0)->paginate(12)->appends('sort', $request->sort);
@@ -39,51 +40,71 @@ class ProductController extends Controller
 
     public function add()
     {
-    	$Brands = Brand::all();
-    	$categoris = Category::all();
-    	$warranty_periods = warranty_period::all();
+        $Brands = Brand::all();
+        $categoris = Category::all();
+        $warranty_periods = warranty_period::all();
 
-    	return view('admin.product.add', compact('brands', 'categoris', 'warranty_periods'));
+        return view('admin.product.add', compact('brands', 'categoris', 'warranty_periods'));
     }
 
     public function create(ProductRequest $request)
     {
-    	$filename = '';
+        $filename = '';
 
         if ($request->hasFile('link')) {
             $file = $request->file('link');
             $filename = $file->getClientOriginalName('link');
+            $duoi = $file->getClientOriginalExtension();            
             $file->move('uploads', $filename);
         }
        
         $request->merge([
              'image' => $filename,
         ]);
-        Product::create($request->all());
+        $product = Product::create($request->all());
+        $id = $product->id;
         $Brands = Brand::all();
-    	$categoris = Category::all();
-    	$warranty_periods = warranty_period::all();
-        Log::create([
-            'user_id' => Auth::user()->id,
-            'action' => 'Thêm mới sản phẩm ',
-            'object' => 'san-pham',
-        ]);
+        $categoris = Category::all();
+        $warranty_periods = warranty_period::all();
 
-    	return view('admin.product.add', compact('brands', 'categoris', 'warranty_periods'))->with('thongbao', 'Thêm mới thành công');
+        for ($i=0; $i <= $request->dem; $i++) { 
+            $c = 'color'.$i;
+            $t = 'total'.$i;
+            $img = 'image'.$i;
+            $fileName = '';
+
+            if ($request->hasFile($img)) {
+                $file = $request->file($img);
+                $fileName = $file->getClientOriginalName($img);
+                $file->move('uploads', $fileName);
+            }
+            list_image::create([
+                'product_id' => $id,
+                'color' => $request->$c,
+                'total' => $request->$t,
+                'image' => $fileName,
+            ]);
+        }
+
+        if ($request->add_more == 'on') {
+            return redirect()->back();
+        } 
+    	   
+        return redirect('admin/san-pham/');
     }
 
     public function views($id)
     {
         if ($product = Product::findOrFail($id)) {
             return view('admin.product.views', compact('product'));
-        } else {
-            echo "Không tìm thấy sản phẩm cỏ ".$id." để sửa.";
-        }
+        } 
+            
+        return '404 Not Found';
     }
 
     public function edit($id)
     { 
-        $product = Product::find($id);
+        $product = Product::findOrFail($id);
         $Brands = Brand::all();
         $categories = Category::all();
         $warranty_periods = warranty_period::all();
@@ -114,10 +135,10 @@ class ProductController extends Controller
         Log::create([
             'user_id' => Auth::user()->id,
             'action' => 'Sửa sản phẩm id: '.$id,
-            'object' => 'san-pham',
+            'object' => 'product',
         ]);
 
-        return view('admin.product.edit', compact('brands', 'categoris', 'warranty_periods', 'product'))->with('thongbao', 'Sửa thành công') ;      
+        return view('admin.product.edit', compact('brands', 'categoris', 'warranty_periods', 'product'))->with('mess', trans('admin.update_successfully')) ;      
     }
 
     public function att()
@@ -129,13 +150,13 @@ class ProductController extends Controller
 
     public function product_hot($id, $hot)
     {
-        $product = Product::find($id);
+        $product = Product::findOrFail($id);
         $product->hot = $hot;
         $product->save();
         Log::create([
             'user_id' => Auth::user()->id,
-            'action' => 'Sửa độ hot sản phẩm id:'.$id,
-            'object' => 'san-pham',
+            'action' => 'edit product id:'.$id,
+            'object' => 'product',
         ]);
 
         return redirect('/admin/san-pham');
@@ -152,21 +173,26 @@ class ProductController extends Controller
 
     public function deleteAtt( $prodcut_id, $id)
     {   
-        $proAtt = ProductAtt::find($id);      
-        $proAtt->delete();
-        Log::create([
-            'user_id' => Auth::user()->id,
-            'action' => 'Xóa thông số kỹ thuật của sản phẩm id: '.$prodcut_id,
-            'object' => 'san-pham',
-        ]);
+        if ( $proAtt = ProductAtt::findOrFail($id)) {
+            $proAtt->delete();
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'action' => 'delete  Specifications id: '.$prodcut_id,
+                'object' => 'Add successfully',
+            ]);
 
-        return redirect('admin/san-pham/xem-thong-so-ky-thuat/'.$prodcut_id);
+            return redirect('admin/product/proAtt/'.$prodcut_id);
+        }
+
+        return '404 not found';             
     }
 
     public function createAtt(Request $request, $id)
     {
         foreach ($request->attribute_id as $attribute_id) {
-            $count = ProductAtt::select()->where(['product_id' => $id, 'attribute_id' => $attribute_id ])->count();
+            $count = ProductAtt::select()
+            ->where(['product_id' => $id, 'attribute_id' => $attribute_id ])
+            ->count();
             if ($count == 0) {
             ProductAtt::create([
                     'product_id' => $id,
@@ -177,11 +203,11 @@ class ProductController extends Controller
 
         Log::create([
             'user_id' => Auth::user()->id,
-            'action' => 'Thêm thông số kỹ thuật của sản phẩm '.$id,
-            'object' => 'san-pham',
+            'action' => 'Add specifications product '.$id,
+            'object' => 'Add successfully',
         ]);
         
-        return redirect('admin/san-pham/xem-thong-so-ky-thuat/'.$id)->with('thongbao', "Thêm thuộc tính thành công");
+        return redirect('admin/product/proAtt/'.$id)->with('mess', trans('admin.add_successfully')) ;
         
     }
 
@@ -190,11 +216,11 @@ class ProductController extends Controller
         Attribute::create($request->all());
         Log::create([
             'user_id' => Auth::user()->id,
-            'action' => 'Thêm thông số kỹ thuật ',
-            'object' => 'thong-so-ky-thuat',
+            'action' => 'Add specifications ',
+            'object' => 'Add specifications',
         ]);
 
-        return redirect('admin/san-pham/thong-so-ky-thuat/')->with('thongbao', 'Thêm thuộc tính thành công');
+        return redirect('admin/product/attributes/')->with('mess', trans('admin.add_successfully')) ;
 
     }
 
@@ -203,7 +229,7 @@ class ProductController extends Controller
         $att= Attribute::find($id);
         $att->delete();
 
-        return redirect('admin/san-pham/thong-so-ky-thuat');
+        return redirect('admin/product/attributes/');
     }
 
     public function editAtt($id)
@@ -215,15 +241,66 @@ class ProductController extends Controller
 
     public function updateAtt(ProductAtributeRequest $request,$id)
     {
-        $att = Attribute::find($id);
+        $att = Attribute::findOrFail($id);
         $att->update($request->all());
         Log::create([
             'user_id' => Auth::user()->id,
-            'action' => 'Sửa thông số kỹ thuật id '.$id,
-            'object' => 'thong-so-ky-thuat',
+            'action' => 'Edit specifications id '.$id,
+            'object' => 'Add specifications',
         ]);
         
-        return redirect('admin/san-pham/sua-thuoc-tinh/'.$id)->with('thongbao','Sửa thuộc tính thành công');
+        return redirect('admin/product/editAtt/'.$id)->with('mess', trans('admin.update_successfully')) ;
     }
 
+    public function list_image($id, Request $request)
+    {
+        for ($i=0; $i <= $request->dem; $i++) { 
+            $c = 'color'.$i;
+            $t = 'total'.$i;
+            $img = 'image'.$i;
+            $fileName = '';
+
+            if ($request->hasFile($img)) {
+                $file = $request->file($img);
+                $fileName = $file->getClientOriginalName($img);
+                $file->move('uploads', $fileName);
+            }
+
+            $list_image = list_image::select()->where(['product_id' => $id, 'color' => $request->$c ])->first();
+
+            if (!empty($list_image) == 0) {               
+                list_image::create([
+                    'product_id' => $id,
+                    'color' => $request->$c,
+                    'total' => $request->$t,
+                    'image' => $fileName,
+                ]);
+            } else {
+                $list_image->total = $request->$t;
+                $list_image->image = $fileName;
+                $list_image->save();
+            } 
+        }
+
+        return redirect()->back();
+    }
+     
+    public function view_list_images($id)
+    {
+        $product_id = $id;
+
+        if ($list_images = Product::findOrFail($id)->list_images()->get()) {
+            return view('admin.product.list_images', compact('list_images', 'product_id'));
+        } 
+        
+        return '404 Not Found';       
+    }
+
+    public function delete_list_images($id)
+    {
+        list_image::find($id)->delete();
+
+        return redirect()->back();
+    }
+    
 }

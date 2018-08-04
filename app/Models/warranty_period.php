@@ -9,7 +9,9 @@ class warranty_period extends Model
     protected $tabel = 'warranty_periods';
 
     protected $fillable = [
-    	'time', 'status', 'type',
+    	'time', 
+    	'status', 
+    	'type',
     ];
 
     public function product()

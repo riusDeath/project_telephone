@@ -14,47 +14,48 @@ class AdminController extends Controller
 {
    public function index()
     {
-        $admins =  User::select()->where('grade', '=', 'boss')->orWhere('grade', '=', 'admin')->get();
+        $admins =  User::select()->where('grade', '=', 'boss')
+                    ->orWhere('grade', '=', 'admin')->get();
+
         return view('admin.admins.index', compact('admins'));
     }
 
     public function edit($id)
     {
         if ($admin = User::findOrFail($id)) {
+
             return view('admin.admins.edit', compact('admin'));           
-        } else {
-            echo "404 Not Found";
-        }
+        } 
+        
+        return '404 Not Found';
     }
 
     public function update(UserRequest $request, $id)
     {
+        if ($user = User::findOrFail($id)) {
+            if ($request->changePassword == 'on') {     
+                $request->merge([
+                    'password' => bcrypt($request->password),
+                ]); 
+            }
+            $user->update($request->all());
+            $user->save();
 
-        $user = User::find($id);
+            return redirect('admin/update-admin/'.$id)->with('mess', trans('admin.update_successfully')) ;
+        } 
 
-        if ($request->changePassword == 'on') {     
-            $request->merge([
-                'password' => bcrypt($request->password),
-            ]); 
-        }
-        $user->update($request->all());
-        $user->save();
-
-        return redirect('admin/sua-thong-tin-admin/'.$id)->with('thongbao', 'Sửa thông tin thành công');
     }
 
     public function delete($id)
     {
-        $user = User::find($id);
-        
-        if ($user->grade == 'boss') {
-            return redirect('admin/danh-sach-admin')->with('thongbao', 'Bạn không có quyền xóa boss');
-        } else {
+        if ($user = User::findOrFail($id)) {           
             $user->status = 0;
             $user->save();
 
-            return redirect('admin/danh-sach-admin');
-        }
+            return redirect('admin/list-admin');
+        } 
+
+        return '404 Not Found';
                     
     }
 
@@ -71,11 +72,11 @@ class AdminController extends Controller
         User::create($request->all());
         Log::create([
             'user_id' => Auth::user()->id,
-            'action' => 'Tạo người dùng ',
-            'object' => 'nguoi-dung',
+            'action' => 'create user',
+            'object' => 'user',
         ]);
 
-        return view('admin.admins.create')->with('thongbao', 'Tạo mới thành công');
+        return view('admin.admins.create')->with('mess', trans('admin.add_successfully')) ;
     }
 
     public function views()
@@ -92,25 +93,20 @@ class AdminController extends Controller
 
         $user = User::find($id);
 
-        if ($user->email == $request->email_confrim) {
+        if ($request->changePassword == 'on') {     
+            $request->merge([
+                'password' => bcrypt($request->password),
+            ]); 
+            $user->update($request->all());        
+            $user->save();
+        }                 
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'action' => 'update user id : '.$id,
+            'object' => 'user',
+        ]);
 
-            if ($request->changePassword == 'on') {     
-                $request->merge([
-                    'password' => bcrypt($request->password),
-                ]); 
-                $user->update($request->all());        
-                $user->save();
-            }
-            Log::create([
-                'user_id' => Auth::user()->id,
-                'action' => 'Sửa thông tin người dùng: '.$id,
-                'object' => 'nguoi-dung',
-            ]);
-            return redirect('admin/danh-sach-admin')->with('thongbao', 'Bạn đã sửa thành công');
-        } else {
-            return redirect('admin/danh-sach-admin')->with('thongbao', 'Bạn đã sửa thành công');
-        }                
+        return redirect('admin/list-admin')->with('mess', trans('admin.update_successfully')) ;
     }
-
     
 }

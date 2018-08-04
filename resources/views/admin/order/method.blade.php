@@ -1,10 +1,10 @@
-@extends('layouts.admin')
+@extends('admin.layouts.admin')
 
 @section('content')
 	<div class="jumbotron">
 		<div class="container">
-			<h3>Phương thức thanh toán </h3>
-			<p>{{ isset($thongbao)?$thongbao:'' }}</p>
+			<h3>{{__('admin.pay')}}</h3>
+			<p>{{ isset($mess)?$mess:'' }}</p>
 			@if(count($errors) >0)
 			<div class="alert alert-danger">
 		    @foreach($errors->all() as $err)
@@ -16,11 +16,11 @@
 				<table class="table table-hover">
 					<thead>
 						<tr>
-							<th>Id phương thức</th>
-							<th>Tên phương thức</th>
-							<th>Trạng thái</th>
-							<th>Nội dung</th>
-							<th>Thao tác</th>
+							<th>Id </th>
+							<th>{{__('form.name')}}</th>
+							<th>{{__('form.status')}}</th>
+							<th>{{__('form.description')}}</th>
+							<th>{{__('form.Action')}}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -28,11 +28,11 @@
 						<tr>
 							<td>{{$pay->id}}</td>
 							<td>{{$pay->name}}</td>
-							<td>{{($pay->status==1)?'Hiển thị':'Ẩn'}}</td>
+							<td>{{($pay->status==1)?'Show':'Hidden'}}</td>
 							<td>{{$pay->description}}</td>
 							<td>
-								<a href="{{route('sua-phuong-thuc-thanh-toan',['id'=>$pay->id])}}" class="label label-success">Sửa</a>
-								<a href="{{route('xoa-phuong-thuc-thanh-toan',['id' => $pay->id])}}" class="label label-danger" onclick="confirm('Thay đổi trạng thái!')">Thay đổi trạng thái</a>
+								<a href="{{route('editPay',['id'=>$pay->id])}}" class="label label-success">{{__('admin.update',['name' => ''])}}</a>
+								<a href="{{route('deletePay',['id' => $pay->id])}}" class="label label-danger" onclick=" return confirm( trans('admin.change',['name' => trans('form.status')]) )">{{__('admin.change',['name' => trans('form.status')])}}</a>
 							</td>
 						</tr>
 						@endforeach
@@ -41,8 +41,8 @@
 				<form action="" method="POST" role="form">
 					<input type="hidden" value="<?php echo csrf_token() ?>" name="_token">
 					<div class="form-group">
-						<label for="">Tên phương thức</label>
-						<input type="text" id="pay" class="form-control"  placeholder="Phương thức thanh toán" name="name">
+						<label for="">{{__('form.name')}}</label>
+						<input type="text" id="pay" class="form-control"  placeholder="{{__('form.name')}}" name="name">
 					</div>	
 					 <div class="form-group">
 					 	<textarea name="description" id="description" rows="10" cols="80">  </textarea>
@@ -50,7 +50,7 @@
 				<script>
 				      CKEDITOR.replace( 'description' );
 				</script>										
-					<button type="submit" class="btn btn-primary">Thêm mới</button>
+					<button type="submit" class="btn btn-primary">{{__('admin.add',['name' => ''])}}</button>
 					
 				</form>
 				

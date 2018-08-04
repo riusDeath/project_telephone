@@ -47,10 +47,12 @@
                 <td><?php echo e($admin->created_at); ?></td>
                 <td>    
                     <a href="<?php echo e(route('sua-thong-tin-admin',[ 'id'=> $admin->id ])); ?>" class="label label-info">Sửa</a>
-                    <?php if($admin->status==1): ?>
+                    <?php if(Auth::user()->grade == 'boss' && $admin->id != Auth::user()->id ): ?>
+                    <?php if($admin->status==1  ): ?>
                      <a href="<?php echo e(route('xoa-quyen-admin',['id' => $admin->id])); ?>" class="label label-danger" onclick="confirm('Bạn muốn xóa quyền truy cập admin <?php echo e($admin->name); ?>?')">Xóa quyền truy cập</a>
                     <?php else: ?>
                      <a href="<?php echo e(route('xoa-khach-hang',['id' => $admin->id])); ?>" class="label label-danger" onclick="confirm('Bạn muốn cấp quyền truy cập <?php echo e($admin->name); ?>?')">Cấp quyền truy cập</a>
+                    <?php endif; ?>                                    
                     <?php endif; ?>                                    
                 </td>
             </tr>

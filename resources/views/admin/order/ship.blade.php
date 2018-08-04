@@ -1,22 +1,21 @@
-@extends('layouts.admin')
+@extends('admin.layouts.admin')
 
 @section('content')
 	<div class="jumbotron">
 		<div class="container">
-			<h3>Phương thức giao hàng</h3>
-			@if(isset($thongbao))
-			<p>{{$thongbao}}</p>
+			<h3>{{__('admin.ship')}}</h3>
+			@if(isset($mess))
+			<p>{{$mess}}</p>
 			@endif
 	<table class="table table-hover">
 					<thead>
 						<tr>
-							<th>Id phương thức</th>
-							<th>Tên phương thức</th>
-							<th>Khu vực giao hàng</th>
-							<th>Giá</th>
-							<th>Trạng thái</th>
-							<th>Nội dung</th>
-							<th>Thao tác</th>
+							<th>Id</th>
+							<th>{{__('form.name')}}</th>
+							<th>{{__('form.adress')}}</th>
+							<th>{{__('form.price')}}</th>
+							<th>{{__('form.status')}}</th>
+							<th>{{__('form.description')}}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -24,13 +23,12 @@
 						<tr>
 							<td>{{$ship->id}}</td>
 							<td>{{$ship->name}}</td>
-							<td>{{$ship->adress}}</td>
 							<td>{{$ship->price}}</td>
-							<td>{{($ship->status==1)?'Hiển thị':'Ẩn'}}</td>
+							<td>{{($ship->status==1)?trans('form.show'):trans('form.hidden')}}</td>
 							<td><?php echo $ship->description; ?></td>
 							<td>
-								<a href="{{route('sua-phuong-thuc-giao-hang',['id'=>$ship->id])}}" class="label label-success">Sửa</a>
-								<a href="{{route('xoa-phuong-thuc-giao-hang',['id' => $ship->id])}}" class="label label-danger" onclick="confirm('Thay đổi trạng thái')">Thay đổi trạng thái</a>
+								<a href="{{route('editShip',['id'=>$ship->id])}}" class="label label-success">{{__('admin.update',['name' => ''])}}</a>
+								<a href="{{route('deleteShip',['id' => $ship->id])}}" class="label label-danger" onclick=" return confirm( trans('admin.change',['name' => trans('form.status')]) )">{{__('admin.change',['name' => trans('form.status')])}}</a>
 							</td>
 						</tr>
 						@endforeach
@@ -42,16 +40,16 @@
 				<form action="" method="POST" role="form">
 					<input type="hidden" value="<?php echo csrf_token() ?>" name="_token">
 					<div class="form-group">
-						<label for="">Tên phương thức</label>
-						<input type="text" class="form-control" id="" placeholder="Phương thức thanh toán" name="name">
+						<label for="">Name</label>
+						<input type="text" class="form-control" id="" placeholder="Name" name="name">
 					</div>	
 					<div class="form-group">
-						<label for="">Giá: </label>
-						<input type="text" class="form-control" id="" placeholder="Giá" name="price">
+						<label for="">price: </label>
+						<input type="text" class="form-control" id="" placeholder="price" name="price">
 					</div>	
 					<div class="form-group">
-						<label for="">Địa chỉ: </label>
-						<input type="text" class="form-control" id="" placeholder="Giá" name="adress">
+						<label for="">Adress: </label>
+						<input type="text" class="form-control" id="" placeholder="Adress" name="adress">
 					</div>		
 					 <div class="form-group">
 					 	<textarea name="description" id="description_ship" rows="10" cols="80">  </textarea>
@@ -59,8 +57,7 @@
 				<script>
 				      CKEDITOR.replace( 'description_ship' );
 				</script>										
-					<button type="submit" class="btn btn-primary">Thêm mới</button>
-
+					<button type="submit" class="btn btn-primary">{{__('admin.add',['name' => ''])}}</button>
 				</form>
 			</div>
 		</div>

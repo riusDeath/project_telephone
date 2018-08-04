@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	$(document).on('click', '.edit-adress-user', function(e){
-		$('.adress-edit').css('display','block');
+		$('.adress-edit').toggle();
 	});
 
 	

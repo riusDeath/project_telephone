@@ -1,16 +1,16 @@
-@extends('layouts.admin')
+@extends('admin.layouts.admin')
 
 @section('content')
 <div class="jumbotron">
 	<div class="alert">
-		{{ isset($thongbao)?$thongbao:'' }}
+		{{ isset($mess)?$mess:'' }}
 	</div>
 	<div class="container">
 		<h3>id : {{$product->id}} </h3>
-		<h3>Tên sản phẩm : {{$product->name}}</h3>
-		<p>Thông số kỹ thuật</p>
+		<h3>Name : {{$product->name}}</h3>
+		<p>Specifications</p>
 		<p>
-			<form action="{{route('xem-thong-so-ky-thuat',['id' => $product->id])}}" method="POST" role="form">
+			<form action="{{route('proAtt',['id' => $product->id])}}" method="POST" role="form">
 				<input type="hidden" value="<?php echo csrf_token() ?>" name="_token">
 				@foreach($types as $type)
 				<div class="col-md-2">
@@ -29,7 +29,7 @@
 					</div>
 				</div>
 				@endforeach										
-				<button type="submit" class="btn btn-primary">Thêm mới</button>
+				<button type="submit" class="btn btn-primary">{{__('admin.add',['name' => ''])}}</button>
 			</form>			
 		</p>
 		<p> 
@@ -37,9 +37,9 @@
 			<thead>
 				<tr>
 					<th>id</th>
-					<th>Tên thuộc tính</th>
-					<th>Giá trị thuộc tính</th>
-					<th>Kiểu thuộc tính</th>
+					<th>{{__('form.name')}}</th>
+					<th>{{__('form.value')}}</th>
+					<th>{{__('form.type')}}</th>
 					<th></th>
 					</tr>
 					</thead>
@@ -51,7 +51,7 @@
 							<td>{{isset($att->value)?$att->value:''}}</td>
 							<td>{{$att->types}}</td>
 							<td>
-								<a href="{{route('xoa-thong-so-ky-thuat',[ 'product_id' => $product->id,'id' => $att->pivot->id, ])}}" onclick="confirm('Bạn muốn xóa thuộc tính {{$att->name}}?')" class="label label-danger"> Xóa thuộc tính</a>
+								<a href="{{route('deleteAtt',[ 'product_id' => $product->id,'id' => $att->pivot->id, ])}}" onclick=" return confirm('You want to delete {{$att->name}}?')" class="label label-danger"> {{__('form.delete')}}</a>
 							</td>
 						</tr>
 					@endforeach
@@ -59,6 +59,5 @@
 				</table></span>
 		</p>
 	</div>
-</div>
-	
+</div>	
 @endsection

@@ -1,25 +1,25 @@
-@extends('layouts.admin')
+@extends('admin.layouts.admin')
 
 @section('content')
 <div class="panel panel-default">
     <div class="jumbotron">
         <div class="container">
-            <h3>Tên khách hàng: {{$us->name}}</h3>
-            <p>Đơn hàng</p>
+            <h3>{{__('form.name')}} {{__('admin.user')}}: {{$us->name}}</h3>
+            <p>{{__('admin.order')}}</p>
             <p>
                 <table class="table">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Địa chỉ giao hàng</th>
-                <th>Số điện thoại</th>
-                <th>Số lượng</th>
-                <th>Giá</th>
-                <th>Phương thức ship</th>
-                <th>Phương thức trả hàng</th>
-                <th>Trạng thái</th>
-                <th>Ngày tạo</th>
-                <th>Thao tác</th>
+                <th>{{__('form.adress')}}</th>
+                <th>{{__('form.phone')}}</th>
+                <th>{{__('form.total')}}</th>
+                <th>{{__('form.price')}}</th>
+                <th>{{__('admin.ship')}}</th>
+                <th>{{__('admin.pay')}}</th>
+                <th>{{__('form.status')}}</th>
+                <th>{{__('form.create')}}</th>
+                <th>{{__('form.Action')}}</th>
             </tr>
             
         </thead>
@@ -34,36 +34,33 @@
                 <td>{{$order->ship_id}}</td>
                 <td>{{$order->pay_id}}</td>
                 <td>
-                     @if($order->status==1)
-                     Đã Duyệt
+                    @if($order->status==1)
+                    {{__('admin.Approved')}}
                     @elseif($order->status == 0)
-                       Chưa Duyệt
-                     @else
-                       Đã giao hàng
-                     @endif 
+                    {{__('admin.Unapproved')}}
+                    @else
+                    {{__('admin.Delivered')}}
+                    @endif 
 
                 </td>
-                <td>{{$order->created_at}}</td>
+                <td>{{date_format($order->created_at, 'd/m/y')}}</td>
                 <td>
-                       <a href="{{route('chi-tiet-don-hang',['id' => $order->id])}}" class="label label-success">Chi tiết đơn hàng</a>
+                       <a href="{{route('detail',['id' => $order->id])}}" class="label label-success">{{__('admin.order_detail')}}</a>
 
                        @if($order->status==1)
-                       <a href="{{route('duyet-don-hang',['id' => $order->id ])}}" class="label label-primary">Đợi giao hàng</a>
+                       <a href="{{route('duyet-don-hang',['id' => $order->id ])}}" class="label label-primary" onclick="return confirm('{{__('admin.Approved')}}')">{{__('admin.Approved')}}</a>
                        @elseif($order->status == 0)
-                       <a href="{{route('duyet-don-hang',['id' => $order->id ])}}" class="label label-danger">Chưa Duyệt</a>
+                       <a href="{{route('approved',['id' => $order->id ])}}" class="label label-danger"  onclick="return confirm('{{__('admin.Unapproved')}}')">{{__('admin.Unapproved')}}</a>
                        @else
-                       <label  class="label label-info" >Đã giao hàng</label>
+                       <label  class="label label-info" >{{__('admin.Delivered')}}</label>
                        @endif 
                 </td>
             </tr>
         @endforeach
         </tbody>
-    </table>
+        </table>
             </p>
         </div>
-    </div>
-  
-
-  
+    </div>  
 </div>
 @stop()

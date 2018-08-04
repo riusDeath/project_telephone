@@ -9,13 +9,16 @@ class Category extends Model
     protected $tabel = 'categories';
 
     protected $fillable = [
-    	'name', 'slug', 'parent', 'status',
+    	'name', 
+        'slug', 
+        'parent', 
+        'status',
     ];
 
  	public function scopeSearch($query){
-		if(empty(request()->search)){
+		if (empty(request()->search)) {
 			return $query;
-		}else{
+		} else {
 			return $query->where('name', 'like', '%'.request()->search.'%');
 		}
 	}

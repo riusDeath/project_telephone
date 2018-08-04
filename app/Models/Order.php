@@ -9,32 +9,42 @@ class Order extends Model
     protected $tabel = 'orders';
 
     protected $fillable = [
-    	'total', 'price', 'user_id', 'status', 'adress', 'phone', 'pay_id', 'ship_id',
+    	'total', 
+        'price', 
+        'user_id', 
+        'status', 
+        'adress', 
+        'phone', 
+        'pay_id', 
+        'ship_id',
+
     ];
 
     public function scopeSearch($query)
     {
-        if(empty($query)){
+        if (empty($query)) {
             return $query;
-        }else{
-            if(request()->search == 3){               
+        } else {
+            if (request()->search == 3) {               
                 return $query;
+            } else{
+                
+                return $query->where('status', '=', request()->search);
             }
-            else{
-                 return $query->where('status', '=', request()->search);
-         }
         }
     } 
 
     public function scopeSearchUser($query)
     {
-    	 if(empty($query)){
+    	if (empty($query)) {
+
             return $query;
-        }else{
-            if(request()->id){               
-                 return $query->where('status', '=', request()->id);
-            }
-            else{
+        } else {
+
+            if (request()->id) {               
+                 
+                return $query->where('status', '=', request()->id);
+            } else {
                  return $query;
             }
         }

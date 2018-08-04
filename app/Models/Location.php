@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Location extends Model
 {
-     protected $tabel = 'locations';
+    protected $tabel = 'locations';
 
     protected $fillable = [
-    	'county', 'adress', 'pro_id',
+    	'county', 
+    	'adress', 
+    	'pro_id',
     ];
 
     public function province()
@@ -17,3 +19,4 @@ class Location extends Model
     	return $this->belongsTo('App\Models\Province', 'pro_id', 'id');
     }
 }
+

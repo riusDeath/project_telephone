@@ -11,14 +11,27 @@ class Product extends Model
     protected $tabel = 'products';
 
     protected $fillable = [
-    	'name', 'price', 'price_sale',
-        'status', 'description', 'image', 'total', 'hot', 'view', 'avg_rate', 'category_id', 'brand_id', 'warranty_period_id',
+    	'name', 
+        'price', 
+        'price_sale',
+        'status', 
+        'description',
+        'image', 
+        'total',
+        'hot', 
+        'view', 
+        'avg_rate', 
+        'category_id', 
+        'brand_id', 
+        'warranty_period_id',
     ];
 
     public function scopeSearch($query){
        if (empty(request()->search)) {
+
 			return $query;
 		} else {
+
             return $query->where('name', 'like', '%'.request()->search.'%')->orWhere('id', request()->search);                            
 		}
     }
@@ -43,17 +56,18 @@ class Product extends Model
         return $this->belongsTo('App\Models\Category', 'category_id', 'id');
     }
 
-    public function comment()
+    public function comments()
     {
         return $this->hasMany('App\Models\Comment', 'product_id', 'id');
     }
 
-    public function rate()
+    public function rates()
     {
         return $this->hasMany('App\Models\Rate', 'product_id', 'id');
     }
 
-    public function rate_avg(){
+    public function rate_avg()
+    {
         $t = 0;
         $avg = 0;
         if ($this->rate) {
@@ -67,11 +81,13 @@ class Product extends Model
         return $avg;
     }
 
-    public function rate_avg1(){
+    public function rate_avg1()
+    {
         $rate = DB::table('rates')
         ->select(DB::raw("AVG(rate) as 'avg'"))
         ->where('product_id',$this->id)
         ->get();
+
         return $rate[0]->avg;
     }
 
@@ -86,6 +102,7 @@ class Product extends Model
                 ->select(count('product_id'))
                 ->groupBy('product_id')
             );
+            
         return $products;
     }
 
@@ -109,4 +126,8 @@ class Product extends Model
         return $this->belongsTo('App\Models\warranty_period', 'warranty_period_id', 'id');
     } 
     
+    public function list_images()
+    {
+        return $this->hasMany('App\Models\list_image', 'product_id', 'id');
+    }
 }

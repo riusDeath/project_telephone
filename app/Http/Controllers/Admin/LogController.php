@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LogController extends Controller
 {
-   	public function logs()
+    public function logs()
     {
         $logs = Log::select()->orderBy('id', 'desc')->paginate(12);
         $objects = Log::select('object')->groupBy('object')->get();   
@@ -19,13 +19,14 @@ class LogController extends Controller
 
     public function search(Request $request)
     {
-    	if (isset($request->object) && $request->object !='0') {
+        if (isset($request->object) && $request->object !='0') {
     		$logs = Log::where('object', $request->object)->paginate(12)->appends('object', $request->object);
-    	} else {
+        } else {
     		$logs = Log::search()->paginate(12)->appends('search', $request->search);  		
-    	}  	
+        }  	
         $objects = Log::select('object')->groupBy('object')->get();       	
 
-		return view('admin.admins.logs', compact('logs', 'objects'));
+        return view('admin.admins.logs', compact('logs', 'objects'));
     }
+    
 }

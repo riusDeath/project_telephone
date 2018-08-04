@@ -53,10 +53,12 @@
                 <td>
                     <a href="<?php echo e(route('sua-ho-so',['id' => $cus->id])); ?>">Sửa hồ sơ</a>
                     <a href="<?php echo e(route('lich-su-mua-hang',[ 'id'=> $cus->id ])); ?>" class="label label-info">Lịch sử mua hàng</a>
+                    <?php if($cus->grade == 'customer' || Auth::user()->grade == 'boss'): ?>
                     <?php if($cus->status==1): ?>
                      <a href="<?php echo e(route('xoa-khach-hang',['id' => $cus->id])); ?>" class="label label-danger" onclick="confirm('Bạn muốn xóa quyền truy cập khách hàng <?php echo e($cus->name); ?>?')">Xóa quyền truy cập</a>
                     <?php else: ?>
                      <a href="<?php echo e(route('xoa-khach-hang',['id' => $cus->id])); ?>" class="label label-danger" onclick="confirm('Bạn muốn cấp quyền truy cập <?php echo e($cus->name); ?>?')">Cấp quyền truy cập</a>
+                    <?php endif; ?>
                     <?php endif; ?>
                                       
                 </td>

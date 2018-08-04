@@ -9,7 +9,10 @@ class Brand extends Model
     protected $tabel = 'brands';
 
     protected $fillable = [
-    	'name', 'adress', 'description', 'status',
+    	'name', 
+    	'adress', 
+    	'description', 
+    	'status',
     ];
 
     public function product()

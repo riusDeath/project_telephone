@@ -1,5 +1,4 @@
-
-@extends('layouts.admin')
+@extends('admin.layouts.admin')
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
@@ -8,18 +7,17 @@
         <form action="" method="get" class="form-inline" role="form">
             <input type="hidden" value="{{csrf_token()}}" name="_token">
             <div class="form-group">
-                <label class="sr-only" for="">Tên sản phẩm hoặc id sản phẩm</label>
-                <input type="text" class="form-control" name="search" placeholder="Tìm kiếm theo tên hoặc id">
+                <input type="text" class="form-control" name="search" placeholder="Search name or id">
             </div>
             <div class="form-group">
                 <select name="sort"  class="form-control">
-                    <option value="0" selected>Tất cả sản phẩm</option>
-                    <option value="1" >Sản phẩm hết hàng</option>
-                    <option value="2">Độ yêu thích của sản phẩm</option>
+                    <option value="0" selected>{{__('admin.all_product')}}</option>
+                    <option value="1" >{{__('admin.item_is_empty')}}</option>
+                    <option value="2">{{__('admin.sort_rate')}}</option>
                 </select>
             </div>                                         
-            <button type="submit"  class="btn btn-primary">Tìm kiếm</button>
-            <a href="{{route('them-san-pham')}}">Thêm mới</a>
+            <button type="submit"  class="btn btn-primary">{{__('form.search')}}</button>
+            <a href="{{route('add_product')}}">{{__('admin.add', ['name' => ''])}}</a>
         </form>
     </div>
     <div class="row">
@@ -30,17 +28,16 @@
                 <thead>
                     <tr>                                 
                         <th data-toggle="true">ID</th>
-                        <th data-toggle="true">Tên sản phẩm</th>
-                        <th data-hide="phone">Ảnh đại diện</th>
-                        <th data-hide="phone">Thông số kỹ thuật</th>
-                        <th data-hide="phone">Giá</th>
-                        <th data-hide="phone">Giá sale</th>
-                        <th data-hide="phone,tablet" >Số lượng</th>
-                        <th data-hide="phone,tablet" >Độ sao </th>
-                        <th data-hide="phone">Trạng thái</th>
-                        <th data-hide="phone">Độ Hot</th>
-                        <th class="text-right" data-sort-ignore="true">Thao tác</th>
-                    </tr>
+                        <th data-toggle="true">{{__('form.name')}}</th>
+                        <th data-hide="phone">{{__('form.image')}}</th>
+                        <th data-hide="phone">{{__('admin.Specification')}}</th>
+                        <th data-hide="phone">{{__('form.price')}}</th>
+                        <th data-hide="phone">{{__('form.price_sale')}}</th>
+                        <th data-hide="phone,tablet" >{{__('form.total')}}</th>
+                        <th data-hide="phone,tablet" >rate</th>
+                        <th data-hide="phone">{{__('form.status')}}</th>
+                        <th data-hide="phone">Hot</th>
+                        <th class="text-right" data-sort-ignore="true">{{__('form.Action')}}</th>
                 </thead>
                 <tbody>
                 @foreach($products as $pro)
@@ -51,7 +48,7 @@
                             <img src="../uploads/<?php echo $pro->image ?>" alt="" width="50px"> 
                         </td>
                         <td>
-                            <a href="{{route('xem-thong-so-ky-thuat',['id' => $pro->id])}}" class="label label-info">Xem</a>
+                            <a href="{{route('attributes',['id' => $pro->id])}}" class="label label-info">view</a>
                         </td>
                         <td>
                             {{ number_format($pro->price)}} VND
@@ -63,20 +60,21 @@
                         <td> {{ $pro->avg_rate}} </td>
                         <td>
                             <span class="label label-primary">
-                                {{ $pro->status==1?"Hiển thị":"Ẩn" }}
+                                {{ $pro->status==1?"Show":"Hidden" }}
                             </span>
                         </td>
                         <td>
                             @if($pro->hot == 1)
-                                <a href="{{route('san-pham-hot',['id' => $pro->id , 'hot'=> 0 ] )}}" class="label label-danger">Hot</a>
+                                <a href="{{route('product_hot',['id' => $pro->id , 'hot'=> 0 ] )}}" class="label label-danger">Hot</a>
                             @else
-                                <a href="{{route('san-pham-hot',['id' => $pro->id ,'hot'=> 1])}}" class="label label-success">bình thường</a>
+                                <a href="{{route('product_hot',['id' => $pro->id ,'hot'=> 1])}}" class="label label-success">{{__('form.normal')}}</a>
                             @endif
                             </td>
                                 <td class="text-right">
                                     <div class="btn-group">
-                                        <a href="{{route('xem-san-pham',['id' => $pro->id ])}}" class="btn-white btn btn-xs btn-info">Xem</a>
-                                        <a href="{{route('sua-san-pham',['id' => $pro->id])}}" class="btn-white btn btn-xs btn-danger">Sửa</a>
+                                        <a href="{{route('view_product',['id' => $pro->id ])}}" class="btn-white btn btn-xs btn-info">view</a>
+                                        <a href="{{route('update_product',['id' => $pro->id])}}" class="btn-white btn btn-xs btn-danger">{{__('admin.update',['name' => ''])}}</a>
+                                        <a href="{{route('view-list-image',['id' => $pro->id])}}" >{{__('form.list_image')}}</a>
                                     </div>
                                 </td>
                             </tr>

@@ -16,8 +16,8 @@ class CreateProductAttTable extends Migration
         Schema::create('product_atts', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('attribute_id')->unsigned()->nullable();
-            $table->foreign('attribute_id')->references('id')->on('attributes');
             $table->integer('product_id')->unsigned()->nullable();
+            $table->foreign('attribute_id')->references('id')->on('attributes');
             $table->foreign('product_id')->references('id')->on('products');
             $table->timestamp('created_at')->nullable()->useCurrent();
             $table->timestamp('updated_at')->nullable()->useCurrent();

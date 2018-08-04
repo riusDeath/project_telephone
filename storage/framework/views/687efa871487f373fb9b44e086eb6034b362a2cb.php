@@ -23,10 +23,7 @@
 					</div>
 					<div class="form-group">
 							<input type="text" name="types" class="form-control" id="" placeholder="Kiểu thuộc tính">
-					</div>
-					
-					
-				
+					</div>							
 					<button type="submit" class="btn btn-primary">Thêm mới</button>
 				</form>
 			</div>

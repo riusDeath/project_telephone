@@ -9,7 +9,8 @@ class Pay extends Model
     protected $tabel = 'pays';
 
     protected $fillable = [
-    	'name', 'description',
+    	'name', 
+    	'description',
     ];
 
     public function order()

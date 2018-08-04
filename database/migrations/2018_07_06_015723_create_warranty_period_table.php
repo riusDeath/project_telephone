@@ -18,7 +18,7 @@ class CreateWarrantyPeriodTable extends Migration
             $table->integer('time')->nullable();
             $table->string('type')->default('months');
             $table->tinyInteger('status')->default(1);
-           $table->timestamp('created_at')->nullable()->useCurrent();
+            $table->timestamp('created_at')->nullable()->useCurrent();
             $table->timestamp('updated_at')->nullable()->useCurrent();
  
         });
