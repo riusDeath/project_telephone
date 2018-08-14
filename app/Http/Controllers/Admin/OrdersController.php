@@ -10,6 +10,8 @@ use App\Models\Pay;
 use App\Models\Ship;
 use App\Models\User;
 use App\Models\Log;
+use App\Models\Sale;
+use App\Models\code_discount;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\PayRequest;
 use App\Http\Requests\ShipRequest;
@@ -35,8 +37,14 @@ class OrdersController extends Controller
     {
         if ($order = Order::findOrFail($id)) {
             $detail = OrderDetail::search($id)->get();
+            $sales = Sale::select()
+            ->where('total', '>', 0)
+            ->where('status',1)
+            ->whereDate('date_create','<=', $order->created_at)
+            ->whereDate('date_end','>=',  $order->created_at)
+            ->get();
 
-            return view('admin.order.detail', compact('detail','order'));
+            return view('admin.order.detail', compact('detail', 'order', 'sales'));
         } 
         
         return '404 not Found';     	
@@ -89,11 +97,6 @@ class OrdersController extends Controller
             $order->status =2;
         }
         $order->save();
-        Log::create([
-            'user_id' => Auth::user()->id,
-            'action' => 'Approved id: '.$id,
-            'object' => 'order',
-        ]);
 
         return redirect()->back();
     }
@@ -111,11 +114,6 @@ class OrdersController extends Controller
         $pay->name = $request->name;
         $pay->description = $request->description;
         $pay->save();
-        Log::create([
-            'user_id' => Auth::user()->id,
-            'action' => 'update pay: '.$id,
-            'object' => 'pay',
-        ]);
 
         return redirect('admin/method/editPay/'.$id)
                 ->with('mess', trans('admin.update_successfully')) ;
@@ -134,13 +132,9 @@ class OrdersController extends Controller
         $ship= Ship::find($id);
         $ship->update($request->all());
         $ship->save();
-        Log::create([
-            'user_id' => Auth::user()->id,
-            'action' => 'Update ship: '.$id,
-            'object' => 'ship',
-        ]);
 
-        return redirect('admin/method/updateShip/'.$id)->with('mess', trans('admin.update_successfully')) ;
+        return redirect('admin/method/updateShip/'.$id)
+        ->with('mess', trans('admin.update_successfully')) ;
     }
 
     public function deletePay($id)
@@ -152,11 +146,6 @@ class OrdersController extends Controller
                 $pay->status = 1;
             }                      
             $pay->save();
-            Log::create([
-                'user_id' => Auth::user()->id,
-                'action' => 'change status pay: '.$id,
-                'object' => 'pay',
-            ]);
 
             return redirect('admin/method/pay');
         } 
@@ -173,11 +162,6 @@ class OrdersController extends Controller
                 $ship->status = 1;
             }
             $ship->save();
-            Log::create([
-                'user_id' => Auth::user()->id,
-                'action' => 'change status ship: '.$id,
-                'object' => 'ship',
-            ]);
 
             return redirect('admin/method/ship');
         } 

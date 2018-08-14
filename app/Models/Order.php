@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Order extends Model
 {
@@ -17,7 +18,7 @@ class Order extends Model
         'phone', 
         'pay_id', 
         'ship_id',
-
+        'code_id',
     ];
 
     public function scopeSearch($query)
@@ -28,7 +29,6 @@ class Order extends Model
             if (request()->search == 3) {               
                 return $query;
             } else{
-                
                 return $query->where('status', '=', request()->search);
             }
         }
@@ -55,6 +55,7 @@ class Order extends Model
         return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
 
+
     public function orderDetail()
     {
         return $this->hasMany('App\Models\OrderDetail', 'order_id', 'id');
@@ -68,6 +69,11 @@ class Order extends Model
     public function pay()
     {
         return $this->belongsTo('App\Models\Pay', 'pay_id', 'id');
+    }
+
+    public function code()
+    {
+        return $this->hasOne('App\Models\code_discount', 'id', 'code_id');
     }
 
 }

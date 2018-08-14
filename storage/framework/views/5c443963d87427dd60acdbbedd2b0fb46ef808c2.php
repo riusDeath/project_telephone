@@ -211,22 +211,22 @@
                 </div>
                 </div>
             </div>
-        </div>
+            </div>
         <!-- ======== -->
         <div class="block product-price-range ">
             <div class="sidebar-bar-title">
-                <h3>Giá VNĐ</h3>
+                <h3><?php echo e(__('home.price')); ?> VNĐ</h3>
             </div>
             <div class="block-content">
                 <div class="slider-range">
                 <form action="<?php echo route('product_price'); ?>" method="POST" enctype="multipart/form-data">
                     <input type="hidden" value="<?php echo csrf_token() ?>" name='_token'>
                 <div class="c2cYd1" data-spm-anchor-id="a2o4n.searchlistcategory.filter.i0.605b47feN2XWiV">
-                    <div class="cnHBqi">Giá từ</div>
+                    <div class="cnHBqi"> <?php echo e(__('home.price')); ?> <?php echo e(__('home.from')); ?></div>
                 <div class="c2uiAC">
                     <div class="c1vuTH">
                     <input type="number" id="price_min" min="0" class="c30Om7" placeholder="Min" value="0" pattern="[0-9]*" name="value_min">
-                    <div class="c1DHiF">đến : </div>
+                    <div class="c1DHiF"><?php echo e(__('home.to')); ?> : </div>
                     <input id="price_max" type="number" min="0" class="c30Om7" placeholder="Max" value="0" pattern="[0-9]*" name="value_max">
                     <button type="submit" class="ant-btn c3R9mX ant-btn-primary ant-btn-icon-only">
                         <img src="<?php echo e(asset('uploads/icon.png')); ?>" alt="" width="20px">
@@ -430,7 +430,7 @@
             }     
         });  
 }) ;
-    $(document).ready(function(){
+$(document).ready(function(){
     $('.mysortok').change(function(e){
         e.preventDefault();
         var sort = $(this).val();
@@ -447,14 +447,14 @@
                     // temp+= '<li class="item col-lg-4 col-md-4 col-sm-6 col-xs-6 ">'+value.description+'</li>'; 
                 temp += '<li class="item col-lg-4 col-md-4 col-sm-6 col-xs-6 "><div class="product-item"><div class="item-inner"><div class="product-thumbnail"><div class="icon-sale-label sale-left">Sale</div><div class="icon-new-label new-right">New</div><div class="pr-img-area"><a title="Ipsums Dolors Untra" href="<?php echo e(url('/')); ?>/product/product_details/'+value.id+'"><div> <img class="first-img" src="<?php echo e(url('/')); ?>/uploads/'+value.image+' "><img class="hover-img" src="<?php echo e(url('/')); ?>/uploads/'+value.image+' "></div> </a><span><a class="add-to-cart-mt " data-toggle="modal" href="#modal-id"><i class="fa fa-shopping-cart"></i>Thêm vào giỏ hàng</a></span> </a> </a><span><a class="add-to-cart-mt " data-toggle="modal" href="#modal-id"><i class="fa fa-shopping-cart"></i>Thêm vào giỏ hàng</a></span> </a></div><div class="pr-info-area"><div class="pr-button"><div class="mt-button add_to_wishlist"> <a href=""> <i class="fa fa-heart"></i> </a> </div><div class="mt-button add_to_compare"> <a href=""> <i class="fa fa-signal"></i> </a> </div><div class="mt-button quick-view"> <a href=""> <i class="fa fa-search"></i> </a> </div></div></div></div><div class="item-info"><div class="info-inner"><div class="item-title"> <a title="Ipsums Dolors Untra" href="">'+value.name+'</a> </div><div class="item-content"><div class="rating"> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> </div><div class="item-price"><div class="price-box"><span class="regular-price"> <div class="item-price"><div class="price-box"> <span class="regular-price"> <span class="price">'+value.price+' VNĐ</span> </span> </div></div></div></div> </div></div></div></li>';                                      
                                 });
-                        $('.products-grid').html(temp);
-                    },error:function(res){
+                $('.products-grid').html('<div class="scroll_product">'+temp+'</div>');
+                $('.pagination').hide();
+                },error:function(res){
                         alert("loi");
                 }
         });
     });
-
-    }); 
-  </script>
+}); 
+</script>
 <?php $__env->stopSection(); ?>
   

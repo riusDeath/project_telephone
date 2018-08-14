@@ -13,6 +13,8 @@ use App\Models\OrderDetail;
 use App\Models\Attribute;
 use App\Models\ProductAtt;
 use App\Models\Log;
+use App\Models\Comment;
+use App\Models\Sale;
 use App\Models\list_image;
 use Illuminate\Support\Facades\Auth;
 use App\Services\PayUService\Exception;
@@ -27,9 +29,17 @@ class ProductController extends Controller
         if (isset($request->sort) && $request->sort !=0) {
             if ($request->sort == 1) {
                 $products = Product::where('total', 0)->paginate(12)->appends('sort', $request->sort);
-            } else {
-                $products =  Product::select()->orderBy('avg_rate', 'desc')->paginate(12)->appends('sort', $request->sort);          
-            }           
+            } else if ($request->sort == 2) {
+                    $products =  Product::select()
+                    ->orderBy('avg_rate', 'desc')
+                    ->paginate(12)
+                    ->appends('sort', $request->sort);          
+                }  else {
+                    $products =  Product::select()
+                    ->where('hot', 1)
+                    ->paginate(12)
+                    ->appends('sort', $request->hot);
+                }         
         } else {
            $products = Product::search()->orderBy('id', 'desc')->paginate(12);
         }
@@ -54,7 +64,6 @@ class ProductController extends Controller
         if ($request->hasFile('link')) {
             $file = $request->file('link');
             $filename = $file->getClientOriginalName('link');
-            $duoi = $file->getClientOriginalExtension();            
             $file->move('uploads', $filename);
         }
        
@@ -90,13 +99,18 @@ class ProductController extends Controller
             return redirect()->back();
         } 
     	   
-        return redirect('admin/san-pham/');
+        return redirect('admin/product/');
     }
 
     public function views($id)
     {
         if ($product = Product::findOrFail($id)) {
-            return view('admin.product.views', compact('product'));
+            $comments = Comment::where(['product_id' => $id, 'comment_style' => 0])->get();
+            $comments_child = Comment::where('product_id', $id)
+            ->where('comment_style', '<>', 0)
+            ->get();
+
+            return view('admin.product.views', compact('product', 'comments', 'comments_child'));
         } 
             
         return '404 Not Found';
@@ -125,18 +139,13 @@ class ProductController extends Controller
         $request->merge([
              'image' => $fileName,
         ]);
-        $product = Product::find($id);
+        $product = Product::findOrFail($id);
         $product->update($request->all());
         $product->save();       
         $product = Product::find($id);
         $Brands = Brand::all();
         $categoris = Category::all();
         $warranty_periods = warranty_period::all();
-        Log::create([
-            'user_id' => Auth::user()->id,
-            'action' => 'Sửa sản phẩm id: '.$id,
-            'object' => 'product',
-        ]);
 
         return view('admin.product.edit', compact('brands', 'categoris', 'warranty_periods', 'product'))->with('mess', trans('admin.update_successfully')) ;      
     }
@@ -153,13 +162,8 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->hot = $hot;
         $product->save();
-        Log::create([
-            'user_id' => Auth::user()->id,
-            'action' => 'edit product id:'.$id,
-            'object' => 'product',
-        ]);
 
-        return redirect('/admin/san-pham');
+        return redirect()->back();
     }
 
     public function proAtt($id)
@@ -175,11 +179,6 @@ class ProductController extends Controller
     {   
         if ( $proAtt = ProductAtt::findOrFail($id)) {
             $proAtt->delete();
-            Log::create([
-                'user_id' => Auth::user()->id,
-                'action' => 'delete  Specifications id: '.$prodcut_id,
-                'object' => 'Add successfully',
-            ]);
 
             return redirect('admin/product/proAtt/'.$prodcut_id);
         }
@@ -200,12 +199,6 @@ class ProductController extends Controller
                 ]);            
             }
         }
-
-        Log::create([
-            'user_id' => Auth::user()->id,
-            'action' => 'Add specifications product '.$id,
-            'object' => 'Add successfully',
-        ]);
         
         return redirect('admin/product/proAtt/'.$id)->with('mess', trans('admin.add_successfully')) ;
         
@@ -214,11 +207,6 @@ class ProductController extends Controller
     public function addAtt(ProductAtributeRequest $request)
     {
         Attribute::create($request->all());
-        Log::create([
-            'user_id' => Auth::user()->id,
-            'action' => 'Add specifications ',
-            'object' => 'Add specifications',
-        ]);
 
         return redirect('admin/product/attributes/')->with('mess', trans('admin.add_successfully')) ;
 
@@ -226,7 +214,7 @@ class ProductController extends Controller
 
     public function exitAtt($id)
     {
-        $att= Attribute::find($id);
+        $att= Attribute::findOrFail($id);
         $att->delete();
 
         return redirect('admin/product/attributes/');
@@ -234,7 +222,7 @@ class ProductController extends Controller
 
     public function editAtt($id)
     {       
-        $att= Attribute::find($id);
+        $att= Attribute::findOrFail($id);
 
         return view('admin.product.editAtt', compact('att'));
     }
@@ -243,11 +231,6 @@ class ProductController extends Controller
     {
         $att = Attribute::findOrFail($id);
         $att->update($request->all());
-        Log::create([
-            'user_id' => Auth::user()->id,
-            'action' => 'Edit specifications id '.$id,
-            'object' => 'Add specifications',
-        ]);
         
         return redirect('admin/product/editAtt/'.$id)->with('mess', trans('admin.update_successfully')) ;
     }
@@ -287,10 +270,10 @@ class ProductController extends Controller
      
     public function view_list_images($id)
     {
-        $product_id = $id;
+        $product = Product::findOrFail($id);
 
         if ($list_images = Product::findOrFail($id)->list_images()->get()) {
-            return view('admin.product.list_images', compact('list_images', 'product_id'));
+            return view('admin.product.list_images', compact('list_images', 'product'));
         } 
         
         return '404 Not Found';       
@@ -298,7 +281,7 @@ class ProductController extends Controller
 
     public function delete_list_images($id)
     {
-        list_image::find($id)->delete();
+        list_image::findOrFail($id)->delete();
 
         return redirect()->back();
     }

@@ -48,7 +48,7 @@
                        <a href="{{route('detail',['id' => $order->id])}}" class="label label-success">{{__('admin.order_detail')}}</a>
 
                        @if($order->status==1)
-                       <a href="{{route('duyet-don-hang',['id' => $order->id ])}}" class="label label-primary" onclick="return confirm('{{__('admin.Approved')}}')">{{__('admin.Approved')}}</a>
+                       <a href="{{route('approved',['id' => $order->id ])}}" class="label label-primary" onclick="return confirm('{{__('admin.Approved')}}')">{{__('admin.Approved')}}</a>
                        @elseif($order->status == 0)
                        <a href="{{route('approved',['id' => $order->id ])}}" class="label label-danger"  onclick="return confirm('{{__('admin.Unapproved')}}')">{{__('admin.Unapproved')}}</a>
                        @else

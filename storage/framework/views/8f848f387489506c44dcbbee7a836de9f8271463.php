@@ -3,26 +3,28 @@
 		<div class="">
 		<div class="" style="padding:10px">
 		<div class="row">
-			<h3> <?php echo e($product->name); ?></h3>
+			<h3><?php echo e($product->name); ?></h3>
 
-			<div class="col-md-6">
+			<div class="col-md-4">
 				<img src="<?php echo e(url('/')); ?>/uploads/<?php echo $product['image']?>" alt="" class="reponsive" width="300px">
 			</div>
-			<p>ID: <?php echo e($product->id); ?>| <?php echo e(date('d/m/Y',strtotime($product->created_at))); ?>  </p>           
-			<h3 for=""><?php echo e(number_format($product['price'])); ?>  VNĐ</h3>
-			<div class="col-md-6"  style="padding:0px">	
-            <p><?php echo e(__('admin.category')); ?>: <?php echo e($product->category->name); ?></p>
-            <p><?php echo e(__('form.brand')); ?>: <?php echo e($product->brand->name); ?></p>
-			<p><?php echo e(__('form.warranty_period')); ?>: <?php echo e($product->warranty_period->time); ?> <?php echo e($product->warranty_period->type); ?></p>
-			<p><?php echo e(__('form.total')); ?> : <?php echo e($product->total); ?> cái</p>
-			<p><?php echo e(__('form.price')); ?>: <?php echo e(number_format($product['price'])); ?> VNĐ</p>
-			<p><?php echo e(__('form.price_sale')); ?>: <?php echo e(number_format($product['price_sale'])); ?> VNĐ</p>
-			<p>Rate: <?php echo e($product->avg_rate); ?> /5 starts</p>	
-			<a href="<?php echo e(route('update_product',['id' => $product->id])); ?>" class="btn btn-success"><?php echo e(__('form.update')); ?></a>									
-			</div>
-			
-
-        <div class="clearfix">
+            <div class="col-md-8"  style="padding:0px"> 
+            <div class="col-md-6">
+			    <p>ID: <?php echo e($product->id); ?>| <?php echo e(date('d/m/Y',strtotime($product->created_at))); ?>  </p>           
+			    <h3 for=""><?php echo e(number_format($product['price'])); ?>  VNĐ</h3>
+                <p><?php echo e(__('admin.category')); ?>: <?php echo e($product->category->name); ?></p>
+                <p><?php echo e(__('form.brand')); ?>: <?php echo e($product->brand->name); ?></p>
+                            <p><?php echo e(__('form.warranty_period')); ?>: <?php echo e($product->warranty_period->time); ?> <?php echo e($product->warranty_period->type); ?></p>
+            </div>
+			<div class="col-md-6">
+                <p><?php echo e(__('form.total')); ?> : <?php echo e($product->total); ?> cái</p>
+                <p><?php echo e(__('form.price')); ?>: <?php echo e(number_format($product['price'])); ?> VNĐ</p>
+                <p><?php echo e(__('form.price_sale')); ?>: <?php echo e(number_format($product['price_sale'])); ?> VNĐ</p>
+                <p>Rate: <?php echo e($product->avg_rate); ?> /5 starts</p>    
+                <a href="<?php echo e(route('update_product',['id' => $product->id])); ?>" class="btn btn-success"><?php echo e(__('form.update')); ?></a>                                    
+                </div>
+            </div>	
+        <div class="col-md-12">
             <p>
             <label for=""><?php echo e(__('form.description')); ?>:</label>
             <p>
@@ -79,14 +81,13 @@
                 <div class="double_div"></div>
                 <button type="submit" class="btn btn-primary"><?php echo e(__('admin.add', ['name' => ''])); ?></button>
             </form>
-            </div>         
-            
+            </div>                    
             <?php endif; ?>
         </div>
-        <?php if(count($product->comments) !=0): ?> 
+        <?php if(count($comments) !=0): ?> 
         <hr>       
         <h3><?php echo e(__('form.table_commet')); ?></h3>
-        <table class="table">
+        <table class="table table_comment">
         <thead>
             <tr>
                 <th>id <?php echo e(__('admin.user')); ?></th>
@@ -97,19 +98,35 @@
             </tr>            
         </thead>
         <tbody>
-        <?php $__currentLoopData = $product->comments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cm): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <?php $__currentLoopData = $comments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cm): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <tr>
                 <td><?php echo e($cm->user->id); ?></td>
                 <td><?php echo e($cm->user->name); ?></td>
                 <td><?php echo e($cm->comment); ?></td>
-                <td><?php echo e($cm->created_at); ?></td>
+                <td><?php echo e(date_format($cm->created_at,'d/m/y')); ?></td>
                 <td>
                     <a href="<?php echo e(route('delete-comment',[
                         'id' => $cm->id,
                         'product_id' => $product->id
-                    ])); ?>" class="label label-danger" onclick="confirm('Bạn muốn xóa comment <?php echo e($cm->id); ?>?')"><?php echo e(__('form.delete')); ?></a>
+                    ])); ?>" class="label label-danger delete_comment" ><?php echo e(__('form.delete')); ?></a>
                 </td>
             </tr>
+            <?php $__currentLoopData = $comments_child; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cm_child): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php if($cm_child->comment_style == $cm->id): ?>
+            <tr >
+                <td></td>
+                <td><?php echo e($cm_child->user->id); ?>: <?php echo e($cm_child->user->name); ?></td>
+                <td><?php echo e($cm_child->comment); ?></td>
+                <td><?php echo e(date_format($cm_child->created_at,'d/m/y')); ?></td>
+                <td>
+                    <a href="<?php echo e(route('delete-comment',[
+                        'id' => $cm_child->id,
+                        'product_id' => $product->id
+                    ])); ?>" class="label label-danger delete_comment" ><?php echo e(__('form.delete')); ?></a>
+                </td>
+            </tr>
+            <?php endif; ?>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </tbody>
         </table>
@@ -117,27 +134,27 @@
         <?php if(count($product->rates) !=0): ?>  
         <hr>    
         <h3><?php echo e(__('form.rate')); ?></h3>
-            <table class="table">
-        <thead>
-            <tr>
-                <th>id <?php echo e(__('admin.user')); ?></th>
-                <th><?php echo e(__('admin.user')); ?></th>
-                <th>rate</th>
-                <th><?php echo e(__('form.create')); ?></th>
-            </tr>            
-        </thead>
-        <tbody>
-        <?php $__currentLoopData = $product->rates; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rate): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <tr>
-                <td><?php echo e($rate->user->id); ?></td>
-                <td><?php echo e($rate->user->name); ?></td>
-                <td><?php echo e($rate->rate); ?></td>
-                <td><?php echo e($rate->created_at); ?></td>
-            </tr>
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-        </tbody>
-         </table>
-         <?php endif; ?>
+        <table class="table ">
+            <thead>
+                <tr>
+                    <th>id <?php echo e(__('admin.user')); ?></th>
+                    <th><?php echo e(__('admin.user')); ?></th>
+                    <th>rate</th>
+                    <th><?php echo e(__('form.create')); ?></th>
+                </tr>            
+            </thead>
+            <tbody>
+            <?php $__currentLoopData = $product->rates; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rate): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <tr>
+                    <td><?php echo e($rate->user->id); ?></td>
+                    <td><?php echo e($rate->user->name); ?></td>
+                    <td><?php echo e($rate->rate); ?></td>
+                    <td><?php echo e($rate->created_at); ?></td>
+                </tr>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </tbody>
+        </table>
+        <?php endif; ?>
 		</div>		
 	</div>
 </div>
@@ -151,6 +168,6 @@
 </script>
 <script type="text/javascript" src="<?php echo e(asset('public/js/list_image.js')); ?>">
 </script>
-
+<script type="text/javascript" src="<?php echo e(asset('public/js/comment.js')); ?>"></script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('admin.layouts.admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

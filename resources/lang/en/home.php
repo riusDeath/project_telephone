@@ -31,10 +31,14 @@ return [
 	'out_up_stock' => 'Out of stock',
 	'information' => 'Information',
 	'order_confirm' => 'Order confirmation',
-	'search' => 'Search name or id ò product',
+	'search' => 'Search name or id of product',
 	'answer_question' => 'Comment in here',
 	'reply' => 'Reply',
 	'send' => 'Send',
 	'add_cart' => 'You want to add products to your cart',
 	'sale' => 'Sale',
+	'price' => 'Price',
+	'from' => 'From',
+	'to' => 'To',
+	
 ];

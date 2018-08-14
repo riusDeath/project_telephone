@@ -5,7 +5,7 @@
 <div class="panel-heading">Add new  Slide</div>
     <div>    
     @if(isset($mess))
-    {{mess}}
+    {{ mess }}
     @endif
     </div>
     <div class="panel-body">

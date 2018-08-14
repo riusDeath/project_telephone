@@ -36,7 +36,11 @@
 								<h4><?php echo e(__('form.fill_information')); ?></h4>
 								<hr>
 								<form method="post" action="<?php echo e(route('checkoutOrder')); ?>">	
-									<input type="hidden" value="<?php echo e(csrf_token()); ?>" name="_token">								
+									<input type="hidden" value="<?php echo e(csrf_token()); ?>" name="_token">
+									<div class="form-group">
+										<label for=""><?php echo e(__('admin.code')); ?>:  </label>
+										<input type="text" class="code"  name="code">
+									</div>
 									<div  id="home" >
 										<div class="" >
 											<h4 class="complete"><?php echo e(__('form.adress_customer')); ?>:</h4> 
@@ -108,27 +112,19 @@
 						</h3>
 					</div>
 					<div class="block-content" style="font-size: 16px">
-						<h3 class="complete"><?php echo e(__('admin.pay')); ?></h3>
+						<h3 class="complete"><?php echo e(__('home.sale')); ?></h3>
 						<p class="complete">
 							<adress>
-								<?php $__currentLoopData = $wars; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $war): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-								<p><span class="glyphicon glyphicon-certificate"></span>  <?php echo e($war->time); ?> <?php echo e($war->type); ?></p>
-								<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-							</adress>
-						</p>
-						<dt class="complete"><?php echo e(__('admin.ship')); ?></dt>
-						<p class="complete">
-							<adress>
-								<?php $__currentLoopData = $ships; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ship): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-								<div class="radio">
-									<label>
-										<input type="radio" name="ship" value="<?php echo e($ship->id); ?>" checked="checked">
-										<?php echo e($ship->name); ?>
+								<?php if(count($sales) !=0): ?>
+		                        <h4><?php echo e(__('home.sale')); ?></h4>
+		                        <?php $__currentLoopData = $sales; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sale): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+		                            <a href="<?php echo e(route('sale')); ?>">
+		                                <span class="col-md-3"><img src="<?php echo e(asset('uploads/'.$sale->image)); ?>" alt="" width="100px"></span>
+		                                <?php echo e($sale->name); ?>
 
-									</label>
-									<label for=""><?php echo e(number_format($ship->price)); ?> VNĐ</label>
-								</div>
-								<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+		                            </a>
+		                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+		                        <?php endif; ?>
 							</adress>
 						</p>				 
 				  	</div>

@@ -14,7 +14,7 @@
                 <div class="product-view-area">
                     <div class="product-big-image col-xs-12 col-sm-5 col-lg-5 col-md-5">
                         <div class="icon-sale-label sale-left">Sale</div>
-                        <div class="large-image"> 
+                        <div class="large-image "> 
                             <a href="<?php echo e(asset('uploads/'.$product->image)); ?>" class="cloud-zoom" id="zoom1" rel="useWrapper: false, adjustY:0, adjustX:20"> 
                                 <img class="zoom-img zoom_avatar" src="<?php echo e(asset('uploads/'.$product->image)); ?>" alt="products " width="500px"> 
                             </a> 
@@ -22,7 +22,7 @@
                         <div class="flexslider flexslider-thumb">
                             <ul class="previews-list slides">
                                 <li>
-                                    <a href="<?php echo e(asset('uploads/'.$product->image)); ?>" class='cloud-zoom-gallery avatar'>
+                                    <a href="<?php echo e(asset('uploads/'.$product->image)); ?>" class='cloud-zoom-gallery avatar' rel="useZoom: 'zoom1', smallImage: '<?php echo e(asset('uploads/'.$product->image)); ?>' ">
                                         <img  style="width:50px"  src="<?php echo e(asset('uploads/'.$product->image)); ?>" alt = "Thumbnail 2"/>
                                     </a>
                                 </li>
@@ -58,14 +58,7 @@
                             </p>
                             <?php endif; ?>
                         </div>
-                        <div class="ratings">
-                            <div class="rating">                        
-                                <div class="rate-star">
-                                    <div class="rated-star" style="width:<?php echo e(($product->rate_avg1()!=0)?($product->rate_avg1()/5*100):0); ?>%;">
-                                        &nbsp;
-                                    </div>
-                                </div>
-                            </div>                  
+                        <div class="">
                             <p class="availability in-stock pull-right"><?php echo e(__('form.status')); ?>: 
                                 <span class="total_stock">                          
                                     <?php if($product->total>=1): ?>
@@ -80,8 +73,34 @@
                                 </span>
                             </p>
                         </div>
-                        <h4><?php echo e(__('admin.brand')); ?></h4>
-                        <p><?php echo e($product->warranty_period->time); ?> <?php echo e($product->warranty_period->type); ?></p>
+                        <h4><?php echo e(__('admin.brand')); ?>: <?php echo e($product->brand->name); ?> </h4>
+                        <p><?php echo e(__('form.warranty_period')); ?>: <?php echo e($product->warranty_period->time); ?> <?php echo e($product->warranty_period->type); ?></p>
+                        <?php if(count($product->attribute) != 0): ?>
+                            <h3><?php echo e(__('admin.Specification')); ?></h3>
+                            <ul class="list-group">
+                            <?php $__currentLoopData = $product->attribute; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attribute): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <li class="list-group-item"><?php echo e($attribute->name); ?></li>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </ul>
+                        <?php endif; ?>
+                        <?php if(count($sales) !=0): ?>
+                            <div class="sale" >
+                            <h4><?php echo e(__('home.sale')); ?></h4>
+                            <?php $__currentLoopData = $sales; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sale): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <div>
+                                    <a href="<?php echo e(route('sale')); ?>">
+                                    <img src="<?php echo e(asset('uploads/'.$sale->image)); ?>" alt="" width="100px">
+                                    <?php echo e($sale->name); ?>
+
+                                    <p>
+                                        <?php echo e(__('form.total')); ?>: <?php echo e($sale->total); ?>
+
+                                    </p>
+                                    </a>
+                                </div>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </div>
+                        <?php endif; ?>
                         <form action="<?php echo e(route('cart',['id' => $product->id])); ?>" method="post">
                             <?php if(count($product->list_images) !=0): ?>
                             <select name="color" id="inputColor"  required="required" class="select_color" href="<?php echo e(url('product/total-list-image')); ?>">
@@ -122,6 +141,7 @@
                             </ul>            
                         </div>
                     </div>
+
                 </div>
             </div>
             <div class="product-overview-tab">
@@ -134,7 +154,7 @@
                                         <a href="#description" data-toggle="tab"><?php echo e(__('form.description')); ?> </a>
                                     </li>                
                                     <li> 
-                                        <a href="#reviews" data-toggle="tab">Reviews</a> 
+                                        <a href="#reviews" data-toggle="tab"><?php echo e(__('form.rating')); ?></a> 
                                     </li>
                                     <li>
                                         <a href="#product_tags" data-toggle="tab"><?php echo e(__('home.comment')); ?></a>
@@ -142,9 +162,6 @@
                                 </ul>
                                 <div id="productTabContent" class="tab-content">
                                     <div class="tab-pane fade in active" id="description">
-                                        <div class="std">
-                                            <p><?php echo $product->description; ?></p>
-                                        </div>
                                         <div class="short-description">
                                             <h2><?php echo e(__('home.information')); ?></h2>
                                             <p><?php echo $product->description; ?> </p>
@@ -180,8 +197,8 @@
 
                                                 <?php endif; ?>
                                                 <div class="review-ratting">
-                                                    <div class="rating">
-                                                        <h1 class="ajax_rate_avg"><?php echo e((float)$product->rate_avg1()); ?> <i class="fa fa-star"></i></h1> 
+                                                    <div class="rating my_rating">
+                                                        <h1 class=""><?php echo e((float)$product->rate_avg1()); ?> <i class="fa fa-star"></i></h1> 
                                                     </div>
                                                     <p><a href="#"><?php echo e(__('home.great')); ?></a></p>
                                                     <table>
@@ -331,7 +348,7 @@
                                                 <input type="hidden" value="<?php echo e($user_login->id); ?>" name="user_id">
                                                 <?php endif; ?>
                                                 <?php if(Auth::check()): ?>
-                                                <button type="button" href="<?php echo e(route('add-comment',['id' => $product->id])); ?>" class="next-btn next-btn-primary next-btn-medium qna-ask-btn" class="btn_comment"><?php echo e(__('home.comment')); ?></button>
+                                                <button type="button" href="<?php echo e(route('add-comment', ['id' => $product->id])); ?>" class="next-btn next-btn-primary next-btn-medium qna-ask-btn" data-id = "<?php echo e($product->id); ?>" class="btn_comment"><?php echo e(__('home.comment')); ?></button>
                                                 <?php else: ?>
                                                 <a href="<?php echo e(route('login')); ?>">
                                                 <?php echo e(__('home.message')); ?>                               
@@ -344,39 +361,42 @@
                                             <div class="qna-empty-text"><?php echo e(__('home.message2')); ?></div>
                                         </div>                                       
                                     </form>
-                                    
                                     <div class="show-comment">
                                         <h3><?php echo e(__('form.table_commet')); ?></h3>
-                                            <?php $__currentLoopData = $comments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $comment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <div class="media " data-spy="scroll">
-                                                <a class="pull-left" href="#">
-                                                    <img src="https://www.gravatar.com/avatar/<?php echo e(md5($comment->user->email)); ?>?s=30" class="user-image" alt="User Image">
-                                                </a>
-                                                <div class="media-body">
-                                                    <h4 class="media-heading">  <?php echo e($comment->user->name); ?></h4>
-                                                    <p><?php echo e($comment->comment); ?></p>
-                                                </div>     
-                                                
-                                                <div style="" class="replies<?php echo e($comment->id); ?> container">
-                                                    <?php $__currentLoopData = $comment->replies; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $reply): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <div class="comment_parent scroll table_commet">
+                                                <?php $__currentLoopData = $comments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $comment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <div class="media " data-spy="scroll">
                                                     <a class="pull-left" href="#">
-                                                        <img src="https://www.gravatar.com/avatar/<?php echo e(md5($reply->user->email)); ?>?s=30" class="user-image" alt="User Image">
+                                                        <img class="avatar" src="https://www.gravatar.com/avatar/<?php echo e(md5($comment->user->email)); ?>?s=30" class="user-image" alt="User Image">
                                                     </a>
                                                     <div class="media-body">
-                                                        <h4 class="media-heading">  <?php echo e($reply->user->name); ?></h4>
-                                                        <p><?php echo e($reply->comment); ?></p>
+                                                        <h4 class="media-heading"><?php echo e($comment->user->name); ?></h4>
+                                                        <p><?php echo e($comment->comment); ?></p>
+                                                    </div> 
+                                                    <?php if(Auth::check()): ?>
+                                                    <button style="button" class="reply" comment_id = "<?php echo e($comment->id); ?>"><i class="glyphicon glyphicon-pencil"></i></button>
+                                                    <?php endif; ?>    
+                                                    <div style="display: none" class="replies<?php echo e($comment->id); ?> container comment_child<?php echo e($comment->id); ?>">
+                                                        <form action="" method="POST" role="form" class="form-inline container">
+                                                            <div class="form-group">
+                                                                <textarea placeholder="<?php echo e(__('home.reply')); ?>" rows="5" maxlength="300" type="text" height="100%" data-id="<?php echo e($product->id); ?>" name="comment" style="border-radius: 20px" class="form-control comment<?php echo e($comment->id); ?>"></textarea>
+                                                            </div>                       
+                                                            <button type="button" class="btn btn-primary reply_comment" comment_id="<?php echo e($comment->id); ?>"><?php echo e(__('home.send')); ?></button>
+                                                        </form>
+                                                        <?php $__currentLoopData = $comment->replies; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $reply): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <a class="pull-left" href="#">
+                                                            <img src="https://www.gravatar.com/avatar/<?php echo e(md5($reply->user->email)); ?>?s=30" class="user-image" alt="User Image">
+                                                        </a>
+                                                        <div class="media-body ">
+                                                            <h4 class="media-heading">  <?php echo e($reply->user->name); ?></h4>
+                                                            <p><?php echo e($reply->comment); ?></p>
+                                                        </div>
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                     </div>
-                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                                    <form action="" method="POST" role="form" class="form-inline container">
-                                                        <div class="form-group">
-                                                            <input type="text" class="form-control comment<?php echo e($comment->id); ?>" id="" placeholder="<?php echo e(__('home.reply')); ?>">
-                                                        </div>                       
-                                                        <button type="button" class="btn btn-primary reply_comment" comment_id="<?php echo e($comment->id); ?>"><?php echo e(__('home.send')); ?></button>
-                                                    </form>
+
                                                 </div>
-                                                <button style="button" class="reply" comment_id = "<?php echo e($comment->id); ?>"><?php echo e(__('home.reply')); ?></button>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </div>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         <div>
                                             <?php echo e($comments->links()); ?>
 
@@ -487,7 +507,7 @@
                                                         </div>
                                                         <div class="item-info">
                                                             <div class="info-inner">
-                                                                <div class="item-title"> <a title="Ipsums Dolors Untra" href="single_product.html"><?php echo e($product->name); ?> </a> </div>
+                                                                <div class="item-title"> <a title="Ipsums Dolors Untra" href="single_product.html"><?php echo e($product->name); ?></a> </div>
                                                                 <div class="item-content">
                                                                     <div class="rating"> 
                                                                         <i class="fa fa-star"></i> 
@@ -499,7 +519,7 @@
                                                                     <div class="item-price">
                                                                         <div class="price-box"> 
                                                                             <span class="regular-price"> 
-                                                                                <span class="price"><?php echo e($product->price_sale==0?number_format($product->price):number_format($product->price_sale)); ?> VND
+                                                                                <span class="price"><?php echo e($product->price_sale==0?number_format( $product->price ):number_format( $product->price_sale )); ?> VND
                                                                                 </span> 
                                                                             </span> 
                                                                         </div>
@@ -648,6 +668,7 @@
         </div>
     </section>
 </div>
+
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection("script"); ?>  
@@ -656,5 +677,6 @@
     <script type="text/javascript" src="<?php echo e(asset('public/js/views.product.js')); ?>">    
     </script>
 <?php $__env->stopSection(); ?>
+
 
 <?php echo $__env->make('layouts.index', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

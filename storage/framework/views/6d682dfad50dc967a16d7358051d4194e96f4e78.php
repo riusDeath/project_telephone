@@ -9,7 +9,7 @@
 		<h3>Name : <?php echo e($product->name); ?></h3>
 		<p>Specifications</p>
 		<p>
-			<form action="<?php echo e(route('xem-thong-so-ky-thuat',['id' => $product->id])); ?>" method="POST" role="form">
+			<form action="<?php echo e(route('proAtt',['id' => $product->id])); ?>" method="POST" role="form">
 				<input type="hidden" value="<?php echo csrf_token() ?>" name="_token">
 				<?php $__currentLoopData = $types; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $type): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 				<div class="col-md-2">
@@ -51,7 +51,7 @@
 							<td><?php echo e(isset($att->value)?$att->value:''); ?></td>
 							<td><?php echo e($att->types); ?></td>
 							<td>
-								<a href="<?php echo e(route('xoa-thong-so-ky-thuat',[ 'product_id' => $product->id,'id' => $att->pivot->id, ])); ?>" onclick=" return confirm('You want to delete <?php echo e($att->name); ?>?')" class="label label-danger"> <?php echo e(__('form.delete')); ?></a>
+								<a href="<?php echo e(route('deleteAtt',[ 'product_id' => $product->id,'id' => $att->pivot->id, ])); ?>" onclick=" return confirm('You want to delete <?php echo e($att->name); ?>?')" class="label label-danger"> <?php echo e(__('form.delete')); ?></a>
 							</td>
 						</tr>
 					<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

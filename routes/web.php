@@ -2,7 +2,7 @@
 
 Route::get('demo', function(){
 
-	return view('email.user.checkOrder');
+	return view('email.user.register');
 }
 );
 
@@ -49,7 +49,6 @@ Route::group(['middleware' => 'locale'], function(){
 			Route::post('add-comment/{id}', 'ProductController@addComment')->name('add-comment')->middleware('auth');
 			Route::get('add-comment/{id}', 'ProductController@addComment')->name('add-comment')->middleware('auth');
 			Route::get('add-rate/{id}', 'ProductController@addRate')->name('add-rate')->middleware('auth');
-			Route::get('add-rate/{id}', 'ProductController@addRate')->name('add-rate')->middleware('auth');
 		});
 		
 		Route::group(['prefix' => 'cart' ,  'middleware' => 'auth'], function(){
@@ -64,17 +63,22 @@ Route::group(['middleware' => 'locale'], function(){
 			Route::get('add_cart/{id}','OrderController@add_cart')->name('add_cart');
 			Route::get('deleteAll','OrderController@deleteAll')->name('deleteAll');
 			Route::post('checkoutOrder', 'OrderController@checkout')->name('checkoutOrder');
+			Route::get('detail-{id}', 'OrderController@orderDetail')->name('orderDetailHome');
+		});
+
+		Route::group(['prefix' => 'sale'], function(){
+			Route::get('/', 'SaleController@index')->name('sale');
 		});
 	});
 
 	Route::get('admin/login', 'UserController@getLoginAdmin')->name('login-Admin');
+	Route::post('admin/login', 'UserController@postLoginAdmin')->name('login-Admin');
 
 	Route::get('admin/logout', 'UserController@logoutAdmin')->name('logout-Admin');
 
 	Route::group([ 'namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'adminLogin'], function(){
 
 		Route::get('/', 'DashboardController@index')->name('admin');
-
 		
 		Route::group(['prefix' => 'category'], function(){
 			Route::get('/', 'CategoryController@index')->name('category');
@@ -161,6 +165,25 @@ Route::group(['middleware' => 'locale'], function(){
 			Route::get('delete_slide/{id}', 'SlideController@delete')->name('delete-slide');
 			Route::get('edit_slide/{id}', 'SlideController@edit')->name('edit-slide');
 			Route::post('edit_slide/{id}', 'SlideController@update')->name('edit-slide');
+		});
+
+		Route::group(['prefix' => 'sale'], function(){
+			Route::get('/', 'SaleController@index')->name('list-sale');
+			Route::get('add_sale', 'SaleController@add')->name('add-sale');
+			Route::post('add_sale', 'SaleController@create')->name('add_sale');
+			Route::get('edit_sale/{id}', 'SaleController@edit')->name('edit-sale');
+			Route::post('edit_sale/{id}', 'SaleController@update')->name('edit-sale');
+			Route::get('change/{id}', 'SaleController@change')->name('change-sale');
+		});
+
+		Route::group(['prefix' => 'discount_code'], function(){
+			Route::get('/', 'CodeController@index')->name('list-code');
+			Route::post('/', 'CodeController@index')->name('list-code');
+			Route::get('add-code', 'CodeController@add')->name('add-code');
+			Route::post('add-code', 'CodeController@create')->name('add-code');
+			Route::get('edit', 'CodeController@edit')->name('edit-code');
+			Route::post('edit', 'CodeController@update')->name('edit-code');
+			Route::get('change/{id}', 'CodeController@change')->name('change-code');
 		});
 
 	});

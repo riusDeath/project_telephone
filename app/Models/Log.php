@@ -11,7 +11,8 @@ class Log extends Model
     protected $fillable = [
     	'user_id', 
         'action', 
-        'object'
+        'targetable_id',
+        'targetable_type',
     ];
 
     public function user()
@@ -24,9 +25,13 @@ class Log extends Model
 		if (empty(request()->search)) {
 			return $query;
 		} else {
-            return $query->where('object', 'like', '%'.request()->search.'%')->orWhere('user_id', request()->search);                            
+            return $query->where('targetable_type', 'like', '%'.request()->search.'%')->orWhere('user_id', request()->search);                            
 		}
     }
 
-}
+    public function targetable()
+    {
+        return $this->morphTo();
+    }
 
+}

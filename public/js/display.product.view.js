@@ -8,21 +8,20 @@ $(document).ready(function(){
                 type:"GET",
                 data:{"rate": rate },
                 success:function(res){
-                console.log(res);
-
                 if (res) {
-                    $('.ajax_rate_avg').html(res);
+                    $('.ajax_rate_avg').load(location.href +' .ajax_rate_avg>*');
                     $('.rate_table').load(location.href +' .rate_table>*');
-                    $('.rate-star').load(location.href +' .rate-star>*');
                 } 
             }
             });
         });
+
         $(document).on('click', '.avatar', function(e){
             e.preventDefault();
             var href = $(this).attr('href');
             $('.zoom_avatar').attr('src', href);
         });
+
         $(document).on('change', '.select_color', function(e){
             e.preventDefault();
             var val = $(this).val();
@@ -32,9 +31,10 @@ $(document).ready(function(){
                 url: href,
                 type: "GET",
                 success:function(res){
+                    $('.zoom_avatar').attr('src', '../../uploads/'+res.image+'') ; 
                     $('.total_stock').html(res.total );
                     $('.qty').attr('max', res.total);
                 },
             });
-        })
+        });
     }); 

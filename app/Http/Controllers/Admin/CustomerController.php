@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Order;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Log;
@@ -12,10 +13,10 @@ use App\Models\Log;
 class CustomerController extends Controller
 {
     
-    public function index()
-    {
-        $users = User::search()->orderBy('id', 'desc')->paginate(12);
-
+    public function index(Request $request)
+    {       
+        $users = User::search()->orderBy('id', 'desc')->paginate(12);            
+        
         return view('admin.customer.index', compact('users'));
     }
     public function delete($id)
@@ -28,11 +29,6 @@ class CustomerController extends Controller
             $user->status = 1;
         }
         $user->save();
-        Log::create([
-            'user_id' => Auth::user()->id,
-            'action' => 'Change status user : '.$id,
-            'object' => 'user',
-        ]);
 
         return redirect()->back();
     }
@@ -70,11 +66,6 @@ class CustomerController extends Controller
         }
         $user->update($request->all());
         $user->save();
-        Log::create([
-            'user_id' => Auth::user()->id,
-            'action' => 'update user : '.$id,
-            'object' => 'user',
-        ]);
 
         return redirect('admin/user/edit_account/'.$id)->with('mess', trans('admin.update_successfully')) ;
     }

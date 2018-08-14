@@ -33,9 +33,8 @@
 	      	       <input type="text" class="form-control" name="adress" placeholder="<?php echo e(__('form.adress')); ?>" value="<?php echo e($user_login->adress); ?>" >   
 	      	   	</div>
 	      	   	<div class="form-group">
-	      	   	<input type="checkbox" id="chagneEmail">
 	      	     	<label for=""><?php echo e(__('form.email')); ?></label>
-	      	       <input type="email" class="form-control email" name="email" placeholder="<?php echo e(__('form.email')); ?>" value="<?php echo e($user_login->email); ?>" readonly>
+	      	       <input type="email" class="form-control email" name="email" placeholder="<?php echo e(__('form.email')); ?>" value="<?php echo e($user_login->email); ?>" >
 	      	   	</div> 
 	      	   	<div class="form-group">
 	      	     	<label for=""><?php echo e(__('form.phone')); ?></label>
@@ -43,10 +42,9 @@
 	      	   	</div>        
 	      	    <div class="form-group">
 	      	     	<label for="">
-	      	    <input type="checkbox" id="changePassword" name="changePassword">
-	      	     <?php echo e(__('form.password')); ?></label>
-	      	       <input type="password" class="form-control password" name="password" placeholder="password" value="" disabled="">
-	      	
+	      	    	<input type="checkbox" id="changePassword" name="changePassword">
+	      	     	<?php echo e(__('form.password')); ?></label>
+	      	       <input type="password" class="form-control password" name="password" placeholder="password" value="" disabled="">	      	
 	      	   	</div>
             <input type="hidden" name="email_confrim" value="<?php echo e($user_login->email); ?>">	      	 
 	      	  	<div class="form-group">

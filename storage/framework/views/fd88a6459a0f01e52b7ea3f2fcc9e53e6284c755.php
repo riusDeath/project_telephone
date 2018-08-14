@@ -56,7 +56,7 @@
 
                                 </button>
 
-                                <a class="btn btn-link" href="<?php echo e(route('quen-mat-khau')); ?>">
+                                <a class="btn btn-link" href="<?php echo e(route('forget_password')); ?>">
                                     <?php echo e(__('Quên mật khẩu?')); ?>
 
                                 </a>

@@ -13,6 +13,7 @@ use App\Models\warranty_period;
 use App\Models\Ship;
 use App\Models\Location;
 use App\Models\Province;
+use App\Models\Sale;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -129,8 +130,13 @@ class HomeController extends Controller
         $provinces = Province::all();
         $attributes = Attribute::all();
         $wars = warranty_period::all();
+        $date = date('Y-m-d');
+        $sales = Sale::select()->where('status',1)
+            ->where('date_create','<=', $date)
+            ->where('date_end','>=', $date)
+            ->get();
 
-        return view('display.order.checkout',compact('ships','pays','attributes','locations','provinces','wars'));
+        return view('display.order.checkout',compact('ships','pays','attributes','locations','provinces','wars', 'sales'));
     }
 
     public function editQty(Request $request, $rowId)

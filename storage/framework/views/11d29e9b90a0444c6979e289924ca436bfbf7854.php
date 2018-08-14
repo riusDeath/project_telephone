@@ -5,7 +5,7 @@
         <form action="" class="form-inline" role="form">        
             <div class="form-group">
                 <input class="form-control" name="search" placeholder="Search name or id...">
-            </div>       
+            </div>     
             <button type="submit" class="btn btn-primary"><?php echo e(__('form.search')); ?></button>           
         </form>
     </div>
@@ -40,7 +40,9 @@
                 <td><?php echo e(date_format($cus->created_at, "d/m/Y")); ?></td>
                 <td>
                     <a href="<?php echo e(route('edit_account',['id' => $cus->id])); ?>"><?php echo e(__('admin.Account')); ?></a>
+                    <?php if(count($cus->order) != 0): ?>
                     <a href="<?php echo e(route('destroy',[ 'id'=> $cus->id ])); ?>" class="label label-info"><?php echo e(__('admin.order')); ?></a>
+                    <?php endif; ?>
                     <?php if($cus->grade == 'customer' || Auth::user()->grade == 'boss'): ?>
                     <?php if($cus->status==1): ?>
                      <a href="<?php echo e(route('delete-user',['id' => $cus->id])); ?>" class="label label-danger" onclick=" return confirm('<?php echo e(__('form.remoce_access')); ?> <?php echo e($cus->name); ?>?')"><?php echo e(__('form.remoce_access')); ?></a>

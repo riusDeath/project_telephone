@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Login</title>
-    <base href="{{asset('')}}">
-    <link href="{{asset('public/css/bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('public/font-awesome/css/font-awesome.css')}}" rel="stylesheet">
+    <base href="{{ asset('') }}">
+    <link href="{{ asset('public/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('public/font-awesome/css/font-awesome.css') }}" rel="stylesheet">
 
-    <link href="{{asset('public/css/animate.css')}}" rel="stylesheet">
-    <link href="{{asset('public/css/style.css')}}" rel="stylesheet">
+    <link href="{{ asset('public/css/animate.css') }}" rel="stylesheet">
+    <link href="{{ asset('public/css/style.css') }}" rel="stylesheet">
 @endsection
 
 
@@ -25,7 +25,7 @@
           @if(count($errors) >0)
           <div class="alert alert-danger">
             @foreach($errors->all() as $err)
-                {{$err}} <br/>
+                {{ $err }} <br/>
             @endforeach
           </div>
           @endif

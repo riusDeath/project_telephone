@@ -49,7 +49,7 @@
                        <a href="<?php echo e(route('detail',['id' => $order->id])); ?>" class="label label-success"><?php echo e(__('admin.order_detail')); ?></a>
 
                        <?php if($order->status==1): ?>
-                       <a href="<?php echo e(route('duyet-don-hang',['id' => $order->id ])); ?>" class="label label-primary" onclick="return confirm('<?php echo e(__('admin.Approved')); ?>')"><?php echo e(__('admin.Approved')); ?></a>
+                       <a href="<?php echo e(route('approved',['id' => $order->id ])); ?>" class="label label-primary" onclick="return confirm('<?php echo e(__('admin.Approved')); ?>')"><?php echo e(__('admin.Approved')); ?></a>
                        <?php elseif($order->status == 0): ?>
                        <a href="<?php echo e(route('approved',['id' => $order->id ])); ?>" class="label label-danger"  onclick="return confirm('<?php echo e(__('admin.Unapproved')); ?>')"><?php echo e(__('admin.Unapproved')); ?></a>
                        <?php else: ?>

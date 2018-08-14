@@ -12,6 +12,7 @@
                     <option value="0" selected><?php echo e(__('admin.all_product')); ?></option>
                     <option value="1" ><?php echo e(__('admin.item_is_empty')); ?></option>
                     <option value="2"><?php echo e(__('admin.sort_rate')); ?></option>
+                    <option value="3">Hot</option>
                 </select>
             </div>                                         
             <button type="submit"  class="btn btn-primary"><?php echo e(__('form.search')); ?></button>
@@ -46,7 +47,7 @@
                             <img src="../uploads/<?php echo $pro->image ?>" alt="" width="50px"> 
                         </td>
                         <td>
-                            <a href="<?php echo e(route('attributes',['id' => $pro->id])); ?>" class="label label-info">view</a>
+                            <a href="<?php echo e(route('proAtt',['id' => $pro->id])); ?>" class="label label-info">view</a>
                         </td>
                         <td>
                             <?php echo e(number_format($pro->price)); ?> VND
@@ -58,7 +59,7 @@
                         <td> <?php echo e($pro->avg_rate); ?> </td>
                         <td>
                             <span class="label label-primary">
-                                <?php echo e($pro->status==1?"Show":"Hidden"); ?>
+                                <?php echo e($pro->status==1?trans('form.show'):trans('form.hidden')); ?>
 
                             </span>
                         </td>

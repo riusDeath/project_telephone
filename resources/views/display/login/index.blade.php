@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin</title>
-     <base href="{{asset('')}}">
-    <link href="{{asset('public/css/bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('public/font-awesome/css/font-awesome.css')}}" rel="stylesheet">
+     <base href="{{ asset('') }}">
+    <link href="{{ asset('public/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('public/font-awesome/css/font-awesome.css') }}" rel="stylesheet">
 
-    <link href="{{asset('public/css/animate.css')}}" rel="stylesheet">
-    <link href="{{asset('public/css/style.css')}}" rel="stylesheet">
+    <link href="{{ asset('public/css/animate.css') }}" rel="stylesheet">
+    <link href="{{ asset('public/css/style.css') }}" rel="stylesheet">
 </head>
 <body>
     <div class="gray-bg">
@@ -22,7 +22,7 @@
           @if(count($errors) >0)
           <div class="alert alert-danger">
             @foreach($errors->all() as $err)
-                {{$err}} <br/>
+                {{ $err }} <br/>
             @endforeach
           </div>
           @endif

@@ -23,10 +23,10 @@ class LoginSession
             if ($user->grade == 'admin' || $user->grade=='boss' && $user->status ==1) {
                 return $next($request);
             } else {          
-                return redirect('admin/dangnhap');
+                return redirect('admin/login');
             }
         } else {
-            return redirect('admin/dangnhap');
+            return redirect('admin/login');
         }
     }
 }

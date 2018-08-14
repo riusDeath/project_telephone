@@ -14,9 +14,16 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $cats = Category::search()->orderBy('id','desc')->paginate(12);
+        $cats = Category::search()
+        ->where('parent', 0)
+        ->orderBy('id','desc')
+        ->paginate(12);
+        $cat_child = Category::search()
+        ->where('parent', '<>', 0)
+        ->orderBy('id','desc')
+        ->paginate(12);
 
-        return view('admin.category.index',compact('cats'));
+        return view('admin.category.index',compact('cats', 'cat_child'));
     }
 
     public function add()
@@ -31,22 +38,12 @@ class CategoryController extends Controller
     public function create(CategoryRequest $req)
     {
         Category::create($req->all());
-        Log::create([
-            'user_id' => Auth::user()->id,
-            'action' => 'add category',
-            'object' => 'category',
-        ]);
 
 		return redirect()->back();
     }
 
     public function delete($id)
     {
-        Log::create([
-            'user_id' => Auth::user()->id,
-            'action' => 'delete category '.Category::find($id)->name,
-            'object' => 'category',
-        ]);
         $category = Category::find($id);
 
         if ($category->status == 0) {
@@ -72,11 +69,6 @@ class CategoryController extends Controller
         $cat = Category::find($id);
         $cat->update($req->all());
         $cat->save();
-        Log::create([
-            'user_id' => Auth::user()->id,
-            'action' => 'update category id: '.$id,
-            'object' => 'category',
-        ]);
 
         return redirect('admin/category/update_category/'.$id)
         ->with('mess', trans('admin.update_successfully')) ;

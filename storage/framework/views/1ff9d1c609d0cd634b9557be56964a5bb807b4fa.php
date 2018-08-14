@@ -43,17 +43,14 @@
 
             </div>
             <div class="form-group">
-            <label for=""><?php echo e(__('form.description')); ?></label>
-            <textarea name="description" id="description" rows="10" cols="80" required=""><?php echo e(old('description')); ?> </textarea>
+            <label for=""><?php echo e(__('form.description')); ?></label> 
+            <textarea class="ckeditor" name="editor1" cols="80" rows="10"><?php echo e(old('description')); ?></textarea>
             <script>
-                CKEDITOR.replace( 'description',
-                {
-                    filebrowserBrowseUrl : '/browser/browse.php',
-                    filebrowserUploadUrl : '/uploads/'
-                });
-
+                CKEDITOR.replace( 'editor1', {
+                        filebrowserBrowseUrl: 'http://localhost:8080/shop/shop1/public/ckfinder/ckfinder.html',
+                        filebrowserUploadUrl: 'http://localhost:8080/shop/shop1/public/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files'
+                } );
             </script>
-
             </div>
             <div class="form-group">
                 <label for=""><?php echo e(__('form.price')); ?></label>

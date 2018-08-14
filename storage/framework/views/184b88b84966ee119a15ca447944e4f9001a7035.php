@@ -5,18 +5,18 @@
         <form action="" method="get" class="form-inline" role="form">
             <input type="hidden" value="<?php echo e(csrf_token()); ?>" name="_token">
             <div class="form-group">
-                <label class="sr-only" for="">Tên sản phẩm hoặc id sản phẩm</label>
-                <input type="text" class="form-control" name="search" placeholder="Tìm kiếm theo tên hoặc id">
+                <input type="text" class="form-control" name="search" placeholder="Search name or id">
             </div>
             <div class="form-group">
                 <select name="sort"  class="form-control">
-                    <option value="0" selected>Tất cả sản phẩm</option>
-                    <option value="1" >Sản phẩm hết hàng</option>
-                    <option value="2">Độ yêu thích của sản phẩm</option>
+                    <option value="0" selected><?php echo e(__('admin.all_product')); ?></option>
+                    <option value="1" ><?php echo e(__('admin.item_is_empty')); ?></option>
+                    <option value="2"><?php echo e(__('admin.sort_rate')); ?></option>
+                    <option value="3">Hot</option>
                 </select>
             </div>                                         
-            <button type="submit"  class="btn btn-primary">Tìm kiếm</button>
-            <a href="<?php echo e(route('them-san-pham')); ?>">Thêm mới</a>
+            <button type="submit"  class="btn btn-primary"><?php echo e(__('form.search')); ?></button>
+            <a href="<?php echo e(route('add_product')); ?>"><?php echo e(__('admin.add', ['name' => ''])); ?></a>
         </form>
     </div>
     <div class="row">
@@ -27,17 +27,16 @@
                 <thead>
                     <tr>                                 
                         <th data-toggle="true">ID</th>
-                        <th data-toggle="true">Tên sản phẩm</th>
-                        <th data-hide="phone">Ảnh đại diện</th>
-                        <th data-hide="phone">Thông số kỹ thuật</th>
-                        <th data-hide="phone">Giá</th>
-                        <th data-hide="phone">Giá sale</th>
-                        <th data-hide="phone,tablet" >Số lượng</th>
-                        <th data-hide="phone,tablet" >Độ sao </th>
-                        <th data-hide="phone">Trạng thái</th>
-                        <th data-hide="phone">Độ Hot</th>
-                        <th class="text-right" data-sort-ignore="true">Thao tác</th>
-                    </tr>
+                        <th data-toggle="true"><?php echo e(__('form.name')); ?></th>
+                        <th data-hide="phone"><?php echo e(__('form.image')); ?></th>
+                        <th data-hide="phone"><?php echo e(__('admin.Specification')); ?></th>
+                        <th data-hide="phone"><?php echo e(__('form.price')); ?></th>
+                        <th data-hide="phone"><?php echo e(__('form.price_sale')); ?></th>
+                        <th data-hide="phone,tablet" ><?php echo e(__('form.total')); ?></th>
+                        <th data-hide="phone,tablet" >rate</th>
+                        <th data-hide="phone"><?php echo e(__('form.status')); ?></th>
+                        <th data-hide="phone">Hot</th>
+                        <th class="text-right" data-sort-ignore="true"><?php echo e(__('form.Action')); ?></th>
                 </thead>
                 <tbody>
                 <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pro): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -48,7 +47,7 @@
                             <img src="../uploads/<?php echo $pro->image ?>" alt="" width="50px"> 
                         </td>
                         <td>
-                            <a href="<?php echo e(route('xem-thong-so-ky-thuat',['id' => $pro->id])); ?>" class="label label-info">Xem</a>
+                            <a href="<?php echo e(route('proAtt',['id' => $pro->id])); ?>" class="label label-info">view</a>
                         </td>
                         <td>
                             <?php echo e(number_format($pro->price)); ?> VND
@@ -60,21 +59,22 @@
                         <td> <?php echo e($pro->avg_rate); ?> </td>
                         <td>
                             <span class="label label-primary">
-                                <?php echo e($pro->status==1?"Hiển thị":"Ẩn"); ?>
+                                <?php echo e($pro->status==1?trans('form.show'):trans('form.hidden')); ?>
 
                             </span>
                         </td>
                         <td>
                             <?php if($pro->hot == 1): ?>
-                                <a href="<?php echo e(route('san-pham-hot',['id' => $pro->id , 'hot'=> 0 ] )); ?>" class="label label-danger">Hot</a>
+                                <a href="<?php echo e(route('product_hot',['id' => $pro->id , 'hot'=> 0 ] )); ?>" class="label label-danger">Hot</a>
                             <?php else: ?>
-                                <a href="<?php echo e(route('san-pham-hot',['id' => $pro->id ,'hot'=> 1])); ?>" class="label label-success">bình thường</a>
+                                <a href="<?php echo e(route('product_hot',['id' => $pro->id ,'hot'=> 1])); ?>" class="label label-success"><?php echo e(__('form.normal')); ?></a>
                             <?php endif; ?>
                             </td>
                                 <td class="text-right">
                                     <div class="btn-group">
-                                        <a href="<?php echo e(route('xem-san-pham',['id' => $pro->id ])); ?>" class="btn-white btn btn-xs btn-info">Xem</a>
-                                        <a href="<?php echo e(route('sua-san-pham',['id' => $pro->id])); ?>" class="btn-white btn btn-xs btn-danger">Sửa</a>
+                                        <a href="<?php echo e(route('view_product',['id' => $pro->id ])); ?>" class="btn-white btn btn-xs btn-info">view</a>
+                                        <a href="<?php echo e(route('update_product',['id' => $pro->id])); ?>" class="btn-white btn btn-xs btn-danger"><?php echo e(__('admin.update',['name' => ''])); ?></a>
+                                        <a href="<?php echo e(route('view-list-image',['id' => $pro->id])); ?>" ><?php echo e(__('form.list_image')); ?></a>
                                     </div>
                                 </td>
                             </tr>
@@ -91,4 +91,4 @@
 
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('layouts.admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('admin.layouts.admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

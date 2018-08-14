@@ -8,7 +8,7 @@
   <div>
     
     @if(isset($thongbao))
-    {{thongbao}}
+    {{ thongbao }}
     @endif
   </div>
     <!-- Table -->
@@ -25,7 +25,7 @@
            </div>
            <div class="form-group">
                <label for="">content slide</label>
-               <textarea name="content" id="inputContent" class="form-control" rows="3" required="required">{{$slide->content}}</textarea>
+               <textarea name="content" id="inputContent" class="form-control" rows="3" required="required">{{ $slide->content }}</textarea>
            </div>
             <div class="form-group">
                <label for="">Image</label>

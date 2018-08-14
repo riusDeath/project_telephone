@@ -46,6 +46,11 @@ class Category extends Model
     public function parent_category()
     {
    	    return $this->belongsTo('App\Models\Category', 'parent', 'id');
-    }   
+    }  
+
+    public function parents()
+    {
+        return $this->hasMany('App\Models\Category', 'parent', 'id');
+    } 
     
 }

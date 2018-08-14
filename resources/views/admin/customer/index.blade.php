@@ -7,7 +7,7 @@
         <form action="" class="form-inline" role="form">        
             <div class="form-group">
                 <input class="form-control" name="search" placeholder="Search name or id...">
-            </div>       
+            </div>     
             <button type="submit" class="btn btn-primary">{{__('form.search')}}</button>           
         </form>
     </div>
@@ -42,7 +42,9 @@
                 <td>{{date_format($cus->created_at, "d/m/Y")}}</td>
                 <td>
                     <a href="{{route('edit_account',['id' => $cus->id])}}">{{__('admin.Account')}}</a>
+                    @if(count($cus->order) != 0)
                     <a href="{{route('destroy',[ 'id'=> $cus->id ])}}" class="label label-info">{{__('admin.order')}}</a>
+                    @endif
                     @if($cus->grade == 'customer' || Auth::user()->grade == 'boss')
                     @if($cus->status==1)
                      <a href="{{route('delete-user',['id' => $cus->id])}}" class="label label-danger" onclick=" return confirm('{{__('form.remoce_access')}} {{$cus->name}}?')">{{__('form.remoce_access')}}</a>

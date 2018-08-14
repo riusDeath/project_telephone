@@ -20,7 +20,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo e(asset('public/css/display/style.css')); ?>" media="all">
 <link rel="stylesheet" href="<?php echo e(asset('public/css/font-awesome.min.css')); ?>">
 <link rel="stylesheet" href="<?php echo e(asset('public/css/my.css')); ?>">  
-<link rel="stylesheet" href="<?php echo e(asset('public/css/my.css')); ?>">  
+<link rel="stylesheet" href="<?php echo e(asset('public/css/admin.css')); ?>">  
 
 
 <?php echo $__env->yieldContent('link'); ?>

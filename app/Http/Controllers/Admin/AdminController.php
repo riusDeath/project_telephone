@@ -70,11 +70,6 @@ class AdminController extends Controller
             'password' => bcrypt($request->password),
         ]);
         User::create($request->all());
-        Log::create([
-            'user_id' => Auth::user()->id,
-            'action' => 'create user',
-            'object' => 'user',
-        ]);
 
         return view('admin.admins.create')->with('mess', trans('admin.add_successfully')) ;
     }
@@ -100,11 +95,6 @@ class AdminController extends Controller
             $user->update($request->all());        
             $user->save();
         }                 
-        Log::create([
-            'user_id' => Auth::user()->id,
-            'action' => 'update user id : '.$id,
-            'object' => 'user',
-        ]);
 
         return redirect('admin/list-admin')->with('mess', trans('admin.update_successfully')) ;
     }

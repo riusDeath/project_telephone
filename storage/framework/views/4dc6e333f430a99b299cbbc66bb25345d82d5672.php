@@ -1,7 +1,7 @@
 <?php $__env->startSection('content'); ?>
  <section class="content-header">
  	<h3><?php echo e(__('admin.order_detail')); ?></h3>   
-    </section>
+</section>
  <div class="box-body">	 
  	<div class="jumbotron">
  		<div class="container">
@@ -11,6 +11,19 @@
 				 	<p><?php echo e(__('admin.user')); ?>: id <?php echo e($order->user_id); ?> | <?php echo e(__('form.name')); ?>: <?php echo e($order->user->name); ?></p>
 				 	<p><?php echo e(__('form.total')); ?>: <?php echo e($order->total); ?></p>
 				 	<p><?php echo e(__('form.subtotal')); ?>: <?php echo e($order->price); ?> VNĐ</p>
+				 	<?php if($order->code != null): ?>
+				 	<p>
+				 		<?php echo e(__('admin.code')); ?> : <?php echo e($order->code->sale); ?> %
+				 	</p>
+				 	<?php endif; ?>
+				 	<?php if(isset($sales)): ?>
+				 	<p> 
+				 		<label for=""><?php echo e(__('home.sale')); ?>: </label>
+				 		<?php $__currentLoopData = $sales; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sale): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+				 			<?php echo e($sale->sale); ?>%  
+				 		<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+				 	</p>
+				 	<?php endif; ?>
 				 	<p> <?php echo e(__('form.status')); ?>   : 
 		            <?php if($order->status==1): ?>
 		            <a href="<?php echo e(route('approved',['id' => $order->id ])); ?>" class="label label-primary" onclick="return confirm('<?php echo e(__('admin.Delivered')); ?>')"><?php echo e(__('admin.Approved')); ?></a>

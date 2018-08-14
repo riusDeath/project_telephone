@@ -9,6 +9,8 @@ use App\Models\OrderDetail;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Ship;
+use App\Models\Sale;
+use App\Models\code_discount;
 use App\Models\list_image;
 use App\Mail\OrderShipped;
 use App\Mail\OrderAdmin;
@@ -20,6 +22,7 @@ class OrderController extends Controller
     public function viewOrders($id)
     {
         $orders = User::find($id)->order;
+        
 
         return view('display.order.destroy',compact('orders'));
     }
@@ -44,8 +47,39 @@ class OrderController extends Controller
     public function checkout(Request $request)
     {
         $order = new Order();        
+        $date = date('Y-m-d');
+        $code_discount = code_discount::select()
+            ->where('code', $request->code)
+            ->where('status',1)
+            ->where('date_create','<=', $date)
+            ->where('date_end','>=', $date)
+            ->first();
+        $sales = Sale::select()
+            ->where('total', '>', 0)
+            ->where('status',1)
+            ->where('date_create','<=', $date)
+            ->where('date_end','>=', $date)
+            ->get();
+        $sale = 0;
+
+        if (isset($sales)) {
+            foreach ($sales as $sa) {
+                $sale += $sa->sale;
+                $sa->total -=1;
+                $sa->save();
+            }
+        }  
+
+        if (isset($code_discount)) {
+            $code_discount->status = 0;
+            $code_discount->save();
+            $order->price = number_format((float)Cart::subtotal()*(100 - $code_discount->sale - $sale)/100*1000000); 
+            $order->code_id = $code_discount->id;     
+        } else {
+            $order->price = number_format((float)Cart::subtotal()*(100 - $sale)/100*1000000);
+        }
+        
         $order->total = Cart::count();
-        $order->price = Cart::subtotal();
         $order->user_id = Auth::id();
         $order->adress = $request->adress;
         $order->phone = $request->phone;
@@ -83,13 +117,22 @@ class OrderController extends Controller
         Mail::to(Auth::user()->email, Auth::user()->name)->send(new OrderShipped($order, Cart::content()));
         $admins = User::where('grade', 'admin')->orWhere('grade', 'boss')->get();
 
-        foreach ($admins as $admin) {
-            Mail::to($admin->email, $admin->name)->send(new OrderAdmin($order, Cart::content()));
-        }
+        // foreach ($admins as $admin) {
+        //     Mail::to($admin->email, $admin->name)->send(new OrderAdmin($order, Cart::content()));
+        // }
 
         Cart::destroy();
 
         return redirect('cart/viewOrder');     
+    }
+
+    public function orderDetail($id)
+    {
+        if ($order = Order::findOrFail($id)) {
+            $detail = OrderDetail::search($id)->get();
+
+            return view('display.order.detail', compact('detail','order'));
+        }
     }
     
 }

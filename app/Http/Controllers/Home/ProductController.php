@@ -11,6 +11,7 @@ use App\Models\Slide;
 use App\Models\Comment;
 use App\Models\Rate;
 use App\Models\User;
+use App\Models\Sale;
 use App\Models\list_image;
 use App\Models\Attribute;
 use Illuminate\Support\Facades\Auth;
@@ -50,8 +51,13 @@ class ProductController extends Controller
             $rate_total = Product::find($id)->rates()->count();
             $types = Attribute::select('types')->groupBy('types')->get();
             $comments = Product::find($id)->comments()->where('comment_style', 0)->paginate(12);
+            $date = date('Y-m-d');
+            $sales = Sale::select()->where('status',1)
+            ->where('date_create','<=', $date)
+            ->where('date_end','>=', $date)
+            ->get();
 
-            return view('display.product.view', compact('product', 'types', 'products', 'product_brand', 'rate_one', 'rate_tow', 'rate_three', 'rate_four', 'rate_five', 'rate_total', 'comments'));
+            return view('display.product.view', compact('product', 'types', 'products', 'product_brand', 'rate_one', 'rate_tow', 'rate_three', 'rate_four', 'rate_five', 'rate_total', 'comments', 'sales'));
         } 
      
     }
@@ -88,24 +94,49 @@ class ProductController extends Controller
     public function product_price(Request $request)
     {
         $slides = Slide::where('name', 'product')->get();
-        $products = Product::productPrice()->where('status', '1')->paginate(12)->appends(['value_min' => $request->value_min, 'value_max'=> $request->value_max]);
+        $min = isset($request->value_min) ? $request->value_min : 0;
+        $max = isset($request->value_max) ? $request->value_max : 0;
 
-        return view('display.index',compact('products', 'slides'));
+        if ($min == 0 && $max ==0 ) {
+            $products = Product::paginate(12)
+            ->appends(['value_min' => $request->value_min, 'value_max'=> $request->value_max]);
+        } else {
+            $value_min = ($request->value_min < $request->value_max)?$request->value_min:$request->value_max;
+            $value_max = ($request->value_min > $request->value_max)?$request->value_min:$request->value_max;
+
+            $products = Product::select()
+            ->where('price', '<=', $value_max)
+            ->where('price', '>=', $value_min)
+            ->where('status', '1')
+            ->orderBy('price')
+            ->paginate(12)
+            ->appends(['value_min' => $request->value_min, 'value_max'=> $request->value_max]);
+        }        
+
+        return view('display.index',compact('products', 'slides', 'min', 'max'));
     
     }
 
     public function product_start(Request $request)
     {
         if (!empty($request->rate)) {
-            $total = 0;
-            $dem = 0;
-            foreach ($request->rate as $rate) {
-                $total +=  $rate;
-                $dem++;
+            $dem = count($request->rate);
+
+            if ($dem == 1) {
+                $avg = $request->rate;
+                $products = Product::where('avg_rate', '=', $avg)
+                ->paginate(12)
+                ->appends('rate', $request->rate);
+            } else {
+                $max = max($request->rate);
+                $min = min($request->rate);
+                $products = Product::where('avg_rate', '>=', $min)
+                ->where('avg_rate', '<=', $max)
+                ->orderBy('avg_rate')
+                ->paginate(12)
+                ->appends('rate', $request->rate);
             }
-            $avg= $total/$dem;
             $slides = Slide::where('name', 'product')->get();   
-            $products = Product::where('avg_rate', '>=', $avg)->paginate(12)->appends('rate', $request->rate);
 
             return view('display.index',compact('products', 'slides'));
         }
@@ -114,15 +145,16 @@ class ProductController extends Controller
 
     public function addComment(Request $request, $id)
     {
-        Comment::create([
+        $comment = Comment::create([
             'product_id' => $id,
             'comment' => $request->comment,
             'comment_style' => isset($request->comment_id)?$request->comment_id:0,
             'user_id' => Auth::user()->id,
         ]); 
-        $comments = Product::find($id)->comments()->where('comment_style', 0)->get();
+        $user = Auth::user();
+        // $comments = Product::find($id)->comments()->where('comment_style', 0)->get();
 
-        return response()->json(compact('comments'));
+        return response()->json(compact('comment', 'user'));
     }
 
     public function addRate(Request $request, $id)
@@ -152,7 +184,7 @@ class ProductController extends Controller
             $product->avg_rate = $product->rate_avg1();
             $product->save();
             $avg_rate = $product->rate_avg1();
-            echo  "<h1 class='ajax_rate_avg'>".$avg_rate."<i class='fa fa-star'></i></h1>";
+            echo  " ".$avg_rate."<i class='fa fa-star'></i></h1>";
         } else {
             echo  0;
         }
@@ -161,8 +193,9 @@ class ProductController extends Controller
 
     public function total_list_image($val)
     {
-        $total = list_image::select('total')->where('id', $val)->first();
-        return $total;
+        $list_image = list_image::find($val);
+
+        return $list_image;
     }
     
 }

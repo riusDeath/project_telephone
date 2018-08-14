@@ -36,5 +36,8 @@ return [
 	'reply' => 'Thảo luận',
 	'send' => 'Gửi',
 	'add_cart' => 'Bạn muốn thêm sản phẩm vào giỏ hàng',
-	'sale' => 'Chương trình khuyến mãi',
+	'sale' => 'Khuyến mãi',
+	'price' => 'Giá',
+	'from' => 'Từ',
+	'to' => 'Đến',
 ];

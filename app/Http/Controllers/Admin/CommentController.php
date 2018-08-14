@@ -11,9 +11,13 @@ class CommentController extends Controller
     public function delete($id, $product_id)
     {
         $comment = Comment::find($id);
+        $comments = Comment::find($id)->replies()->get();
         $comment->delete();
-
-        return redirect('admin/product/update_product/'.$product_id)->with('mess', trans('admin.delete_successfully')) ;
+        
+        foreach ($comments as $comment) {
+        	$comment->delete();     	
+        }
+        echo "ok";
     }
     
 }

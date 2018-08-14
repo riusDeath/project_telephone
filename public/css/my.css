@@ -1,3 +1,14 @@
+body{
+    font-size: 15px;
+}
+.scroll{
+    height: 500px;
+    overflow: scroll;
+}
+.scroll_product{
+    height: 1000px;
+    overflow: scroll;
+}
 .rate-star {
     width: 110px;
     height: 20px;
@@ -11,4 +22,14 @@
     position: absolute;
     top: 0;
     left: 0;
+}
+.sale{
+    border:1px solid blue; 
+    padding: 20px; 
+    border-radius: 3px; 
+    margin:20px;
+    color:blue;
+}
+.avatar{
+    border-radius: 5px;
 }

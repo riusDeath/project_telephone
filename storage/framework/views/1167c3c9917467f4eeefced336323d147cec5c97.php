@@ -41,7 +41,7 @@
                 <label for=""><?php echo e(__('form.password_confirm')); ?></label>
                 <input type="password" class="form-control password" name="passwordAgain" placeholder="<?php echo e(__('form.password_confirm')); ?>" disabled>
             </div>           
-            <button type="submit" class="btn btn-primary"><?php echo e(__('form.update')); ?></button>
+            <button type="submit" class="btn btn-primary"><?php echo e(__('form.update',['name' => ''])); ?></button>
         </form>
     </div>
 </div>

@@ -23,7 +23,6 @@ class ComposerSeviceProvider extends ServiceProvider
     {       
         $orders_day = Order::whereDate('created_at',date('Y-m-d'))->get();
         $orders_status = Order::where('status','<>',2)->get();
-        $logs = Log::select('object')->groupBy('object')->get();
         $users = User::all();
         view()->share(compact('orders_day', 'orders_status', 'users'));
        

@@ -5,9 +5,10 @@
 
 <div class="jumbotron">
 	<div class="container">
-		<h1>{{__('passwords.hello')}} {{$user->name}}</h1>
-		<p>
-			{{__('passwords.change_password')}} <a href="{{route('verify')}}" class="label label-success">{{__('passwords.reset_password')}}</a>
+		<h1>{{ __('passwords.hello') }} {{ $user->name }}</h1>
+		<p> 
+			{{ __('passwords.change_password') }} 
+			<a href="{{ route('verify') }}" class="label label-success">{{ __('passwords.reset_password') }}</a>
 		</p>
 	</div>
 </div>

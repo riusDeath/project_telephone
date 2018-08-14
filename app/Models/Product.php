@@ -6,9 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Category;
 use App\Models\Rate;
 use DB;
+use App\Models\Traits\CaptureActivity;
+
+
 class Product extends Model
 {
     protected $tabel = 'products';
+    protected static $capturedEvents = ['created', 'updated', 'delete'];
+    protected static $activityTargetType = User::class;
 
     protected $fillable = [
     	'name', 
@@ -26,9 +31,9 @@ class Product extends Model
         'warranty_period_id',
     ];
 
-    public function scopeSearch($query){
+    public function scopeSearch($query)
+    {
        if (empty(request()->search)) {
-
 			return $query;
 		} else {
 
@@ -47,7 +52,7 @@ class Product extends Model
     }
 
     public function scopeProductPrice($query)
-    {       
+    {   
         return $query->whereBetween('price', [request()->value_min, request()->value_max] );
     }
 
@@ -89,21 +94,6 @@ class Product extends Model
         ->get();
 
         return $rate[0]->avg;
-    }
-
-    public static function bestSelling()
-    {
-        $products = DB::table('products')
-            ->select()
-            ->join('order_details', 'products.id', '=', 'order_details.product_id')
-            ->groupBy('order_details.product_id')
-            ->having(count('product_id'),'>=',
-                DB::table('order_details')
-                ->select(count('product_id'))
-                ->groupBy('product_id')
-            );
-            
-        return $products;
     }
 
     public function orderDetail()

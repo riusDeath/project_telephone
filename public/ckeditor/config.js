@@ -7,6 +7,6 @@ CKEDITOR.editorConfig = function( config ) {
 	// Define changes to default configuration here. For example:
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
-	config.extraPlugins = 'uploadimage';
-	config.uploadUrl = '/uploader/upload.php';
+	config.filebrowserBrowseUrl = 'public/ckfinder/ckfinder.html';
+	config.filebrowserUploadUrl = 'public/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files';
 };

@@ -3,15 +3,15 @@
 @section('content')
 	<div class="jumbotron">
 		<div class="container">
-			<a href="{{route('add-slide')}}" class="btn btn-success">Thêm mơi</a>
+			<a href="{{ route('add-slide') }}" class="btn btn-success">Thêm mơi</a>
 			<h3>Slide </h3>
 			@if(isset($mess))
-			<p>{{$mess}}</p>
+			<p>{{ $mess }}</p>
 			@endif
 			@if(count($errors) >0)
 			<div class="alert alert-danger">
 		    @foreach($errors->all() as $err)
-		        {{$err}} <br/>
+		        {{ $err }} <br/>
 		    @endforeach
 		  </div>
 			@endif
@@ -30,16 +30,16 @@
 					<tbody>
 						@foreach($slides as $slide)
 						<tr>
-							<td>{{$slide->id}}</td>
-							<td>{{$slide->name}}</td>
-							<td>{{$slide->content}}</td>
-							<td>{{$slide->link}}</td>
+							<td>{{ $slide->id }}</td>
+							<td>{{ $slide->name }}</td>
+							<td>{{ $slide->content }}</td>
+							<td>{{ $slide->link }}</td>
 							<td>
-								<img src="{{asset('uploads/'.$slide->link)}}" alt="" width="300px">
+								<img src="{{ asset('uploads/'.$slide->link) }}" alt="" width="300px">
 							</td>
 							<td>
-								<a href="{{route('edit-slide',['id' => $slide->id])}}" class="label label-info">Update</a>
-								<a href="{{route('delete-slide',['id' => $slide->id])}}" class="label label-danger" onclick="return confirm('You want to delete slide')">Delete</a>
+								<a href="{{ route('edit-slide',['id' => $slide->id]) }}" class="label label-info">Update</a>
+								<a href="{{ route('delete-slide',['id' => $slide->id]) }}" class="label label-danger" onclick="return confirm('You want to delete slide')">Delete</a>
 							</td>
 						</tr>
 						@endforeach

@@ -35,6 +35,23 @@
                     <a href="<?php echo e(route('delete_category',['id' => $cat->id])); ?>" class="label label-danger" onclick=" return confirm('You want to chage status <?php echo e($cat->name); ?>?')"><?php echo e(__('form.change')); ?> <?php echo e(__('form.status')); ?></a>
                 </td>
             </tr>
+            <?php $__currentLoopData = $cat_child; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat_ch): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php if($cat_ch->parent == $cat->id): ?>
+                <tr >
+                <td></td>
+                <td><?php echo e($cat_ch->id); ?>: <?php echo e($cat_ch->name); ?></td>
+                <td><?php echo e($cat_ch->created_at); ?></td>
+                <td>
+                    <?php echo e($cat_ch->status==1?trans('form.show'):trans('form.hidden')); ?>
+
+                </td>
+                <td>
+                    <a href="<?php echo e(route('update_category',['id' =>$cat_ch->id])); ?>" class="label label-success"><?php echo e(__('admin.update',  ['name' => trans('admin.category')])); ?></a>
+                    <a href="<?php echo e(route('delete_category',['id' => $cat_ch->id])); ?>" class="label label-danger" onclick=" return confirm('You want to chage status <?php echo e($cat_ch->name); ?>?')"><?php echo e(__('form.change')); ?> <?php echo e(__('form.status')); ?></a>
+                </td>
+            </tr>
+            <?php endif; ?>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </tbody>
     </table>

@@ -30,5 +30,11 @@ return [
 	'all_product' => 'All product',
 	'item_is_empty' => 'Item is empty',
 	'sort_rate' => 'Rating',
-
+	'sale' => 'Sale',
+	'code' => 'Code Discount',
+	'order_user' => 'Customers have orders',
+	'action' => 'Action',
+	'targetable_id' => 'Target id',
+	'targetable_type' => 'Targetable type',
+	'all' => 'All'
 ];

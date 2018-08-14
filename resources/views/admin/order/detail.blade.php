@@ -3,7 +3,7 @@
 @section('content')
  <section class="content-header">
  	<h3>{{__('admin.order_detail')}}</h3>   
-    </section>
+</section>
  <div class="box-body">	 
  	<div class="jumbotron">
  		<div class="container">
@@ -13,6 +13,19 @@
 				 	<p>{{__('admin.user')}}: id {{$order->user_id}} | {{__('form.name')}}: {{$order->user->name}}</p>
 				 	<p>{{__('form.total')}}: {{$order->total}}</p>
 				 	<p>{{__('form.subtotal')}}: {{$order->price}} VNĐ</p>
+				 	@if($order->code != null)
+				 	<p>
+				 		{{__('admin.code')}} : {{ $order->code->sale }} %
+				 	</p>
+				 	@endif
+				 	@if(isset($sales))
+				 	<p> 
+				 		<label for="">{{__('home.sale')}}: </label>
+				 		@foreach($sales as $sale)
+				 			{{$sale->sale}}%  
+				 		@endforeach
+				 	</p>
+				 	@endif
 				 	<p> {{__('form.status')}}   : 
 		            @if($order->status==1)
 		            <a href="{{route('approved',['id' => $order->id ])}}" class="label label-primary" onclick="return confirm('{{__('admin.Delivered')}}')">{{__('admin.Approved')}}</a>

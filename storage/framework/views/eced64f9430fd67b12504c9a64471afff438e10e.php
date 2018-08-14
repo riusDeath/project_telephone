@@ -70,15 +70,13 @@
 			</div>
 			<div class="form-group">
           	<label for=""><?php echo e(__('form.description')); ?></label>
-         	<textarea name="description" id="description" rows="10" cols="80"> <?php echo e($product->description); ?> </textarea>
+         	<textarea name="description" id="editor1" rows="10" class="ckeditor" cols="80"> <?php echo e($product->description); ?> </textarea>
 			<script>
-				CKEDITOR.replace( 'description',
-                {
-			    extraPlugins: 'easyimage',
-			    cloudServices_tokenUrl: 'https://example.com/cs-token-endpoint',
-			    cloudServices_uploadUrl: 'https://your-organization-id.cke-cs.com/easyimage/upload/'
-			    } );
-			</script>
+                CKEDITOR.replace( 'editor1', {
+                        filebrowserBrowseUrl: 'http://localhost:8080/shop/shop1/public/ckfinder/ckfinder.html',
+                        filebrowserUploadUrl: 'http://localhost:8080/shop/shop1/public/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files'
+                } );
+            </script>
         	</div>
 		<div class="form-inline">
 			<div class="form-group">
@@ -121,7 +119,7 @@
 	<?php if(count($product->comments) !=0): ?> 
     <hr>       
     <h3><?php echo e(__('form.table_commet')); ?></h3>
-    <table class="table">
+    <table class="table table_comment">
         <thead>
             <tr>
                 <th>ID </th>
@@ -143,7 +141,7 @@
                     <a href="<?php echo e(route('delete-comment',[
 						'id' => $cm->id,
 						'product_id' => $product->id
-                    ])); ?>" class="label label-danger" onclick="confirm('Bạn muốn xóa comment <?php echo e($cm->id); ?>?')"><?php echo e(__('form.delete')); ?></a>
+                    ])); ?>" class="label label-danger delete_comment" ><?php echo e(__('form.delete')); ?></a>
                 </td>
             </tr>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -153,7 +151,9 @@
     </div>	
 <?php $__env->stopSection(); ?>
 
-
+<?php $__env->startSection('script'); ?>
+	<script type="text/javascript" src="<?php echo e(asset('public/js/comment.js')); ?>"></script>
+<?php $__env->stopSection(); ?>
 
 
 <?php echo $__env->make('admin.layouts.admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

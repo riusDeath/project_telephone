@@ -12,4 +12,6 @@ return [
 	'login' => 'Đăng nhập',
 	'hello' => 'Xin chào',
 	'change_password' => 'Nhấp vào đường link này để thay đổi mật khẩu',
+	'register' => 'Đăng ký',
+	'mess_register' => 'Để xác nhận e -mail, xin vui lòng , nhấn vào link xác nhận này.',
 ];

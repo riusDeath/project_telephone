@@ -50,4 +50,15 @@ return [
 	'check_mail' => 'Check email to follow your orders!',
 	'deleteCart' => 'Remove product from cart',
 	'created_at' => 'Create at',
+	'date_create' => 'Date Create',
+	'date_end' => 'Date end',
+	'qty_code' => 'Quantity created',
+	'random' => 'Random',
+	'choose_email' =>  'Enter the recipient\'s email',
+	'each_email' => 'Each email separated by commas',
+	'sort' => 'sort',
+	'wait' => 'Waiting for delivery',
+	'options' => 'Options',
+	'rating' => 'Reviews',
+	
 ];
